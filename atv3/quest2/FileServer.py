@@ -34,8 +34,6 @@ def startLog():
     )
 
 class FileServer:
-
-
     def __init__(self, host='0.0.0.0', port=7777):
         self.host = host
         self.port = port
@@ -44,7 +42,10 @@ class FileServer:
         self.server_dir = "./server_files"
 
         os.makedirs("./server_files",exist_ok=True)
-
+    
+    '''
+    Inicializa o servidor e entra no loop infinito esperando conexões e solicitações de clientes
+    '''
     def start(self):
         self.server_socket.bind((self.host,self.port))
         self.server_socket.listen()
@@ -64,6 +65,9 @@ class FileServer:
             logging.info(f"Servidor finalizado")
             self.server_socket.close()
     
+    '''
+    Método que trata a conexão dos clientes.
+    '''
     def client_thread(self, client_socket:socket):
         try:
             while True:
@@ -102,6 +106,10 @@ class FileServer:
         except Exception as e:
             logging.error(f"Erro no cliente: {str(e)}")
 
+
+    '''
+    Método que irá tratar as requisições de adicionar arquivos no servidor
+    '''
     def add_file(self, client_socket, filename):
         try:
             
@@ -129,6 +137,9 @@ class FileServer:
             logging.error(f"Erro ao adicionar arquivo {filename}: err {e}")
             self.response(client_socket, 0x01, 2)
 
+    '''
+    Método que irá tratar as requisições de remover arquivos no servidor
+    '''
     def delete_file(self, client_socket, filename):
         try:
             file_path = os.path.join(self.server_dir, filename)
@@ -147,6 +158,9 @@ class FileServer:
             print(f"Erro ao excluir arquivo: {str(e)}")
             self.response(client_socket, 0x02, 2)
 
+    '''
+    Método que irá tratar as requisições de listar todos os arquivos do servidor
+    '''
     def get_file_list(self, client_socket):
         try:
             files = os.listdir(self.server_dir)
@@ -170,7 +184,9 @@ class FileServer:
             logging.error(f"Erro ao enviar lista de arquivos: {str(e)}")
             print(f"Erro ao enviar lista de arquivos: {str(e)}")
             self.response(client_socket,0x03,2)
-
+    '''
+    Método que irá tratar as requisições de download de arquivos no servidor
+    '''
     def get_file(self, client_socket, filename):
         try:
             file_path = os.path.join(self.server_dir, filename)
@@ -199,6 +215,9 @@ class FileServer:
             print(f"Erro ao fazer o download de {filename}")
             self.response(client_socket,0x03,2)
 
+    '''
+    Método padrão de resposta para o cliente
+    '''
     def response(self, client_socket, command, status_code):
         response = struct.pack("!BBB", 0x02, command, status_code)
         client_socket.sendall(response)

@@ -6,6 +6,15 @@ import os
 '''
 
 Autores: 
+    Este código implementa o lado do cliente para o servidor de gerenciamento de arquivos.
+    Ao executar o cliente irá conectar a um servidor e entrará em um loop infinito esperando input do usuário.
+    Os inputs são:
+        1/ADDFILE: adicionar um arquivo no diretório do servidor
+        2/DELETE: remove um arquivo específico no diretório do servidor
+        3/GETFILELIST: lista o nome e o tamanho de todos os arquivos do servidor
+        4/GETFILE: faz o download de um arquivo do servidor e quarda no diretório do cliente
+        5/SAIR: finaliza a conexão
+
     - Hugo Okumura
     - 
 Data Criação: 24/04/2025
@@ -18,6 +27,7 @@ class FileClient:
         self.host = host
         self.port = port
         self.client_files = './client_files'
+        # Dicionário dos comandos
         self.cmd_dic = {
             "ADDFILE":0x01,
             "1":0x01,
@@ -32,6 +42,10 @@ class FileClient:
         }
         os.makedirs(self.client_files, exist_ok=True)
 
+    '''
+    Faz a conexão do cliente com o servidor.
+    Espera o input do usuário para fazer solicitações ao servidor.
+    '''
     def server_connect(self):
 
         try:
@@ -84,6 +98,9 @@ Para operação (3) e (5) não é preciso do nome do arquivo\n\n->"
         except Exception as e:
             print(f"Erro: {str(e)}")
 
+    '''
+    Envia a solicitação de enviar o arquivo ao servidor
+    '''
     def add_file(self,client_socket,filename):
         try:
             file_path = os.path.join(self.client_files, filename)
@@ -105,9 +122,16 @@ Para operação (3) e (5) não é preciso do nome do arquivo\n\n->"
         except Exception as e:
             print(f"Erro ao enviar arquivo: {str(e)}")
 
+    '''
+    Envia a solicitação de remover um arquivo do servidor
+    '''
     def delete_file(self,client_socket):
         self.read_response(client_socket, 2)
 
+
+    '''
+    Envia a solicitação de listar todos os arquivos
+    '''
     def get_file_list(self,client_socket):
         try:
             response = client_socket.recv(3)
@@ -128,6 +152,10 @@ Para operação (3) e (5) não é preciso do nome do arquivo\n\n->"
         except Exception as e:
             print(f"Erro ao listar os arquivos: {str(e)}")
 
+
+    '''
+    Envia a solicitação de download de um arquivo do servidor
+    '''
     def get_file(self,client_socket,filename):
         try:
             response = client_socket.recv(3)
@@ -153,6 +181,9 @@ Para operação (3) e (5) não é preciso do nome do arquivo\n\n->"
         except Exception as e:
             print(f"Erro ao fazer o download do arquivo: {str(e)}") 
     
+    '''
+    Método padrão para aguardar a resposta do servidor
+    '''
     def read_response(self, client_socket, expected_command):
         response = client_socket.recv(3)
         message_type, command_id, status_code = struct.unpack('!BBB', response)
