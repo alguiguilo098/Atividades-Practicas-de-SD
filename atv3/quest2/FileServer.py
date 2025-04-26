@@ -42,10 +42,8 @@ class FileServer:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_dir = "./server_files"
-        self.download_dir = "./download_files"
 
         os.makedirs("./server_files",exist_ok=True)
-        os.makedirs("./download_files",exist_ok=True)
 
     def start(self):
         self.server_socket.bind((self.host,self.port))
@@ -76,7 +74,7 @@ class FileServer:
                 '''
                 ! = ordem big-endian
                 B = unsigned byte de tamanho 1
-                BBB = cada variável ira receber o dado desempacotado no formato unsigned byte
+                BBB = cada variável será atribuída um dado desempacotado no formato unsigned byte
                 '''
                 message_type, command, filename_size = struct.unpack("!BBB", header) 
 
@@ -86,9 +84,11 @@ class FileServer:
                 
                 filename = client_socket.recv(filename_size).decode('utf-8')
                 logging.info(f"Comando {command} recebido para arquivo: {filename}")
+                print(f"Comando {command} recebido para arquivo: {filename}")
 
                 match command:
                     case 0x01:
+                        print("ok")
                         self.add_file(client_socket, filename)
                     case 0x02:
                         self.delete_file(client_socket, filename)
@@ -101,7 +101,6 @@ class FileServer:
 
         except Exception as e:
             logging.error(f"Erro no cliente: {str(e)}")
-
 
     def add_file(self, client_socket, filename):
         try:
@@ -168,8 +167,8 @@ class FileServer:
             print(f"Lista de arquivos enviada com sucesso")
 
         except Exception as e:
-            logging.error(f"Erro ao enviar lista de arquivos")
-            print(f"Erro ao enviar lista de arquivos")
+            logging.error(f"Erro ao enviar lista de arquivos: {str(e)}")
+            print(f"Erro ao enviar lista de arquivos: {str(e)}")
             self.response(client_socket,0x03,2)
 
     def get_file(self, client_socket, filename):
