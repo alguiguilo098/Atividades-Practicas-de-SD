@@ -1,2 +1,4 @@
 **/.venv/
-**/logs/*
+atv3/quest2/logs/**
+atv3/quest2/server_files/**
+atv3/quest2/download_files/**
