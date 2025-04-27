@@ -55,9 +55,10 @@ def main():
             socket.send(f"CONNECT {command[1]} {passha256}".encode())
             print("Connecting...")
             auth=socket.recv(1024).decode().split(",")
+            print(auth[0])
             if auth[0]=="ERROR":
                 print("User not found")
-                return 0
+                continue
             user=auth[1]
         elif command[0]=="CREATEUSER":
             sendcreateuser(socket)
@@ -68,7 +69,8 @@ def main():
             socket.send("PWD".encode())
             print(socket.recv(1024).decode())
         elif command[0]=="CHDIR" and user!=None:
-            pass
+            socket.send(f"CHDIR {command[1]}".encode())
+            print(socket.recv(1024).decode())
         else:
             print("Command not found")
 
