@@ -3,7 +3,26 @@ import sys
 import hashlib
 import socket as sc
 from SocketServerOwn import ServerSocket
-import os 
+import os
+
+def send_string_list(sock, items):
+    # Envia o número de itens
+    sock.send(str(len(items)).encode('utf-8'))
+    sock.recv(1024)
+    # Envia cada item
+    buffer=""
+    for item in items:
+        itembreak=item+"\n"
+        buffer+=itembreak
+    sock.send(buffer.encode('utf-8'))
+def handle_getfiles(sock, current_dir):
+    files = [f for f in os.listdir(current_dir) if os.path.isfile(os.path.join(current_dir, f))]
+    send_string_list(sock, files)
+    print("Files sent to client")
+
+def handle_getdirs(sock, current_dir):
+    dirs = [d for d in os.listdir(current_dir) if os.path.isdir(os.path.join(current_dir, d))]
+    send_string_list(sock, dirs)
 
 def change_directory(conn, data, pathfilesys):
     if len(data) < 2:
@@ -53,11 +72,11 @@ def configDB():
     db.create_tables([User])
     print("Initializing Server...")
 
-def configSocketClient():
+def configSocketClient(port:int):
     hostname:str=sc.gethostbyname(sc.gethostname())
     print(f"Hostname: {hostname}")
 
-    socketserver:ServerSocket=ServerSocket(hostname, int(sys.argv[1]),25)
+    socketserver:ServerSocket=ServerSocket(hostname,port,25)
     (conn,_)=socketserver.accept()
 
     print("Server started")

@@ -1,10 +1,11 @@
 
 from Utils import *
 import threading
-def LogicService():
+
+def LogicService(port:int):
     pathfilesys="./FileSystemServer/"
     configDB()
-    conn = configSocketClient()
+    conn = configSocketClient(port)
     user=None
     while True:
         data=conn.recv(1024).decode()
@@ -24,20 +25,27 @@ def LogicService():
             pathfilesys=change_directory(conn, data, pathfilesys)
             print(pathfilesys)
         elif data[0]=="GETFILE" and user!=None:
-            pass
+            print("entrou no getfile")
+            handle_getfiles(conn, pathfilesys)
         elif data[0]=="GETDIR"and user!=None:
-            pass
+            print("entrou no getdir")
+            handle_getdirs(conn,pathfilesys)
         elif data=="PWD"and user!=None:
             pwd=pathfilesys[18::]
             conn.send(f"Current path:{pwd}".encode())
+        else:
+            print("Invalid command")
 
-# if __name__=="__main__":
-#     threads=[]
-#     for i in range(int(sys.argv[2])):
-#         threads.append(threading.Thread(target=LogicService))
-#         threads[i].start()
-#     for i in range(int(sys.argv[2])):
-#         threads[i].join()
 
 if __name__=="__main__":
-    LogicService()
+    threads=[]
+    pos=2
+    for i in range(int(sys.argv[1])):
+        threads.append(threading.Thread(target=LogicService,args=(int(sys.argv[pos]),)))
+        pos+=1
+
+    for th in threads:
+        th.start()
+
+    for th in threads:
+        th.join()

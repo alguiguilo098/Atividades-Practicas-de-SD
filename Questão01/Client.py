@@ -10,11 +10,11 @@ def exit(socket, user):
     socket.close()
 
 
-def configsocketclient():
+def configsocketclient(port):
     print("Initializing Client...")
     socketclient=SocketClient()
     hostname:str=sc.gethostbyname(sc.gethostname())
-    socketclient.connect(hostname, int(sys.argv[1]))
+    socketclient.connect(hostname, port)
 
     socket=socketclient.socket
     print("Connected to server")
@@ -36,7 +36,7 @@ def msg_login():
     print("Please login first")
 
 def main():
-    socket, path, user = configsocketclient()
+    socket, path, user = configsocketclient(int(sys.argv[1]))
     while True:
         if user==None:
             print(f"$[{path}]:",end="")
@@ -71,6 +71,20 @@ def main():
         elif command[0]=="CHDIR" and user!=None:
             socket.send(f"CHDIR {command[1]}".encode())
             print(socket.recv(1024).decode())
+        elif command[0]=="GETDIR"and user!=None:
+            socket.send(f"GETDIR {path}".encode())
+            numdirs=int(socket.recv(1024).decode())
+            socket.send("OK".encode())
+            print(f"Number of directories:{numdirs}\n")
+            dirs=socket.recv(1024).decode()
+            print(dirs)
+        elif command[0]=="GETFILE" and user!=None:
+            socket.send(f"GETFILE {path}".encode())
+            numfile=int(socket.recv(1024).decode())
+            socket.send("OK".encode())
+            print(f"Number of files:{numfile}\n")
+            files=socket.recv(1024).decode()
+            print(files)
         else:
             print("Command not found")
 
