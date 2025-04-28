@@ -1,8 +1,9 @@
-import hashlib
-import sys
-from User import *
-import socket as sc
-from SocketCliente  import SocketClient
+
+import hashlib # for password hashing
+import sys # for command line arguments
+from User import * # for user database 
+import socket as sc # for socket programming
+from SocketCliente  import SocketClient 
 
 def exit(socket, user):
     socket.send(f"EXIT {user}".encode())
@@ -32,8 +33,10 @@ def sendcreateuser(socket):
     print(socket.recv(1024).decode())
 
 def msg_login():
+    # This function is called when the user is not autenticated
     print("don't have user autenticated ")
     print("Please login first")
+    print("To login, use the command CONNECT <username> <password>")
 
 def main():
     socket, path, user = configsocketclient(int(sys.argv[1]))
