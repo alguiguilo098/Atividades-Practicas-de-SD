@@ -8,11 +8,11 @@
 
 from Utils import * # Implemetation logic for the server
 import threading # for threading
-
+import sys
 def LogicService(port:int):
     pathfilesys="./FileSystemServer/"
     configDB()
-    conn = configSocketClient(port)
+    conn = configSocketClient(port,sys.argv[1])
     user=None
     while True:
         data=conn.recv(1024).decode() # Receive data from the client
@@ -54,8 +54,9 @@ def LogicService(port:int):
 
 if __name__=="__main__":
     threads=[] # list of threads
-    pos=2 #position of the first port
-    for i in range(int(sys.argv[1])):
+    pos=3 #position of the first port
+    
+    for i in range(int(sys.argv[2])):
         # Create a thread for each port
         threads.append(threading.Thread(target=LogicService,args=(int(sys.argv[pos]),)))
         pos+=1

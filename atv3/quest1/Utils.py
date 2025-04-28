@@ -85,7 +85,7 @@ def configDB():
     db.create_tables([User])
     print("Initializing Server...")
 
-def configSocketClient(port:int):
+def configSocketClient(port:int,hostname:str):
     # Get the hostname of the machine 
     print(f"Hostname: {hostname}")
 
