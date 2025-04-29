@@ -1,87 +1,113 @@
-## Descrição da Atividade 1 – Programação com Sockets TCP
+Claro! Aqui está a versão limpa do `README.md`, sem os ícones e com formatação adequada para uso em projetos:
 
-    Disciplina: Sistemas Distribuídos
-    Professor: Rodrigo Campiolo
+---
+
+# Atividade 1 – Programação com Sockets TCP  
+**Disciplina:** Sistemas Distribuídos  
+**Professor:** Rodrigo Campiolo  
 
 ## Objetivo
-    Esta atividade tem como objetivo desenvolver a habilidade de programação em redes utilizando Sockets 
-    TCP, com foco na criação de servidores multiclientes, comunicação baseada em comandos e 
-    manipulação de arquivos e diretórios de forma remota. A atividade é dividida em duas partes:
-    
-## Configuração Do ambiente
-    
-    1. Primeiramente clone o repositório:
 
-    ```bash
-        git clone "<URL>"
-    ```
-    
-    2. Instalar o python na sua máquina usando o comando:
+Esta atividade tem como objetivo desenvolver a habilidade de programação em redes utilizando **Sockets TCP**, com foco na criação de **servidores multiclientes**, comunicação baseada em comandos e manipulação remota de arquivos e diretórios.
 
-    ```bash
-        sudo dnf install python3 python3virtualenv
-    ```
+---
 
-    ou
+## Configuração do Ambiente
 
-    ```bash
-        sudo apt install python3 python3virtualenv
-    ```
+1. Clone o repositório:
+   ```bash
+   git clone "<URL>"
+   ```
 
-    3. Posteriomente  crie um ambiente virtual com o seguinte comando:
+2. Instale o Python e o Virtualenv na sua máquina:
 
-    ```bash
-        virtualenv .venv
-    ```
+   - Para sistemas baseados em Fedora:
+     ```bash
+     sudo dnf install python3 python3-virtualenv
+     ```
 
-    3. Posteriomente  ative o ambiente virtual:
+   - Para sistemas baseados em Ubuntu/Debian:
+     ```bash
+     sudo apt install python3 python3-virtualenv
+     ```
 
-    ```bash
-        source .venv/bin/activete
-    ```
-    
-    4. Posteriomente  ative o ambiente virtual:
+3. Crie um ambiente virtual:
+   ```bash
+   virtualenv .venv
+   ```
 
-    ```bash
-        source .venv/bin/activete
-    ```
-# FileServer.py
+4. Ative o ambiente virtual:
+   ```bash
+   source .venv/bin/activate
+   ```
 
-<ol>
-<li> Como executar
+---
 
-> python3 FileServer.py 
-</ol>
+## Execução dos Arquivos
 
-# FileClients.py
+### FileServer.py
 
-<ol>
-<li> Como executar
+Servidor responsável por gerenciar múltiplos clientes e armazenar arquivos enviados.
 
-> python3 FileClients.py
-</li>
-</ol>
+**Como executar:**
+```bash
+python3 FileServer.py
+```
 
-## Exemplo de uso
+---
 
-    1. Executar FileServer.py
-    2. Em um outro terminal executar FileClient.py
-    3. No diretório criado automaticamente pelo FileClient crie um arquivo de teste
-    4. no terminal executando FileClient digite:
-        -> 1 nomedoarquivo.tipodoarquivo
-        ou
-        -> ADDFILE  nomedoarquivo.tipodoarquivo
-    5. Veja as mensagens de resposta
-    6. digite:
-        -> 5
-        ou
-        -> SAIR
-        para finalizar o processo do cliente
+### FileClient.py
 
+Cliente responsável por se conectar ao servidor e executar comandos remotamente.
 
-## Bibliotecas usadas
-- os
-- socket
-- logging
-- struct
-- peewee
+**Como executar:**
+```bash
+python3 FileClient.py
+```
+
+---
+
+## Exemplo de Uso
+
+1. Em um terminal, execute o servidor:
+   ```bash
+   python3 FileServer.py
+   ```
+
+2. Em outro terminal, execute o cliente:
+   ```bash
+   python3 FileClient.py
+   ```
+
+3. No diretório criado automaticamente pelo cliente, crie um arquivo de teste.
+
+4. No terminal do cliente, envie o arquivo usando:
+   ```bash
+   1 nomedoarquivo.extensao
+   ```
+   ou
+   ```bash
+   ADDFILE nomedoarquivo.extensao
+   ```
+
+5. Verifique as mensagens de resposta do servidor.
+
+6. Para encerrar o cliente, digite:
+   ```bash
+   5
+   ```
+   ou
+   ```bash
+   SAIR
+   ```
+
+---
+
+## Bibliotecas Utilizadas
+
+- os  
+- socket  
+- logging  
+- struct  
+- peewee  
+
