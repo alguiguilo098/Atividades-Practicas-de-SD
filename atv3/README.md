@@ -76,7 +76,9 @@ Esta atividade tem como objetivo desenvolver a habilidade de programação em re
 
 ### EXEMPLO DE USO
    ```
-      bash CREATEUSER 
+      bash
+       
+      CREATEUSER 
       # informe o nome do usuário e a senha (exemplo: ddd, ddd)
 
       CONNECT ddd ddd
@@ -90,7 +92,7 @@ Esta atividade tem como objetivo desenvolver a habilidade de programação em re
 
       GETFILE
       # Mostra a quantidade de arquivos do diretório atual do cliente no servidor 
-      
+
       CHDIR ..
       # Muda o diretório atual do cliente no servidor para o diretório anterior
 

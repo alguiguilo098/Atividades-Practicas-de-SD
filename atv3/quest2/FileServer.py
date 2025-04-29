@@ -16,9 +16,9 @@ Descrição:
 
 Autores: 
     - Hugo Okumura
-    - 
+    - Guilherme Almeida Lopes
 Data Criação: 24/04/2025
-Data Última Atualização: 
+Data Última Atualização: 28/04/2025
 '''
 
 def startLog():

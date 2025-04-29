@@ -1,4 +1,11 @@
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
 
+# Create: 24-04-2025 
+# Last modified: 27-04-2025
+
+# Description: SocketServer class for the file system.
+# This class is used to create a socket server that listens for incoming connections.
 import socket
 class ServerSocket:
     

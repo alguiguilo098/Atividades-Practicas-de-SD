@@ -1,3 +1,13 @@
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
+
+# Create: 24-04-2025 
+# Last modified: 27-04-2025
+
+# Description: This is the server code for the file system. It handles the connection with the client and the logic of the file system.
+# It uses a database to store the users and their passwords. It also handles the file 
+# system operations like creating users, changing directories, getting files and directories.
+
 import hashlib # for password hashing
 import sys # for command line arguments
 from User import * # for user database 

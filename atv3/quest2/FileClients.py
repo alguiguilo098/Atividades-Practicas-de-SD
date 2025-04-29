@@ -16,9 +16,9 @@ Autores:
         5/SAIR: finaliza a conexão
 
     - Hugo Okumura
-    - 
+    - Guilherme Almeida Lopes 
 Data Criação: 24/04/2025
-Data Última Atualização: 
+Data Última Atualização: 28/04/2025
 '''
 
 class FileClient:
@@ -40,6 +40,7 @@ class FileClient:
             "Sair":0x05,
             "5":0x05
         }
+        # Cria o diretório de arquivos do cliente se não existir
         os.makedirs(self.client_files, exist_ok=True)
 
     '''
@@ -83,14 +84,19 @@ Para operação (3) e (5) não é preciso do nome do arquivo\n\n->"
             
                 match cmd:
                     case 0x01:
+                        # envia a solicitação de adicionar um arquivo
                         self.add_file(self.client_socket, filename)
                     case 0x02:
+                        # envia a solicitação de remover um arquivo
                         self.delete_file(self.client_socket)
                     case 0x03:
+                        # envia a solicitação de listar todos os arquivos
                         self.get_file_list(self.client_socket)
                     case 0x04:
+                        # envia a solicitação de download de um arquivo
                         self.get_file(self.client_socket, filename)
                     case 0x05:
+                        # envia a solicitação de desconectar do servidor
                         self.client_socket.close()
                         break
 

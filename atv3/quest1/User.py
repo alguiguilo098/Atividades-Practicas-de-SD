@@ -1,4 +1,10 @@
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
 
+# Create: 24-04-2025 
+# Last modified: 27-04-2025
+
+# Description: This is the User code  defined in the database
 from peewee import * 
 
 db= SqliteDatabase('users.db')

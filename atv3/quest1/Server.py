@@ -1,14 +1,15 @@
 # Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
+
 # Create: 24-04-2025 
 # Last modified: 27-04-2025
 
-# Description: This is the server code for the file system. It handles the connection with the client and the logic of the file system.
-# It uses a database to store the users and their passwords. It also handles the file 
-# system operations like creating users, changing directories, getting files and directories.
+# Description: This is the Client code for the file system. 
+# It handles the connection with thre server and the logic of the file system.
 
 from Utils import * # Implemetation logic for the server
 import threading # for threading
-import sys
+import sys # system arguments
 def LogicService(port:int):
     pathfilesys="./FileSystemServer/"
     configDB()

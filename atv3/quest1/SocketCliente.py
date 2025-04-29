@@ -1,4 +1,11 @@
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
 
+# Create: 24-04-2025 
+# Last modified: 27-04-2025
+
+# Description: SocketClient class for the file system.
+# This class is used to create a socket client that connects to the server.
 import socket as sc
 
 class SocketClient:
