@@ -1,0 +1,6 @@
+**/.venv/
+atv3/quest1/quest1/user.db
+atv3/quest2/logs/**
+atv3/quest2/server_files/**
+atv3/quest2/client_files/**
+
