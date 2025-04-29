@@ -18,8 +18,11 @@ Esta atividade tem como objetivo desenvolver a habilidade de programação em re
    ```bash
    git clone "<URL>"
    ```
-
-2. Instale o Python e o Virtualenv na sua máquina:
+2. Acesse o diretório do projeto:
+   ```bash
+   cd <diretório_do_projeto>
+   ```
+3. Instale o Python e o Virtualenv na sua máquina:
 
    - Para sistemas baseados em Fedora:
      ```bash
@@ -31,19 +34,73 @@ Esta atividade tem como objetivo desenvolver a habilidade de programação em re
      sudo apt install python3 python3-virtualenv
      ```
 
-3. Crie um ambiente virtual:
+4. Crie um ambiente virtual:
    ```bash
    virtualenv .venv
    ```
 
-4. Ative o ambiente virtual:
+5. Ative o ambiente virtual:
    ```bash
    source .venv/bin/activate
    ```
-
+6. Instale as dependências necessárias:
+   ```bash
+   pip install -r requirements.txt
+   ```
 ---
 
-## Execução dos Arquivos
+## Execução dos Arquivos Questão 1
+   Para executar os arquivos da questão 1, utilize o seguintes comandos:
+   ```bash
+      cd quest1
+   ```
+### Server.py
+   Para rodar o servidor, utilize o seguinte comando:
+   ```bash
+      python3 Server.py <ip_do_servidor> <quantidade_de_clientes> <porta1> ...<portaN>
+   ```
+### Cliente.py
+
+   Para rodar o cliente, utilize o seguinte comando:
+   ```bash
+      python3 Client.py <ip_do_servidor> <porta>
+   ```
+### Operações 
+   O cliente pode executar as seguintes operações:
+   - CREATEUSER: Cria um novo usuário.
+   - CONNECT <user> <password>: Autentica um usuário existente
+   - PWD: Mostra o diretório atual que o cliente está no servidor 
+   - CHDIR <diretório> ou .. : Muda o diretório atual do cliente no servidor
+   - GETFILE: Mostra a quantide de arquivo do diretório atual 
+   - GETDIR: Mostra a quantidade de diretórios do diretório atual
+
+### EXEMPLO DE USO
+   ```
+      bash CREATEUSER 
+      # informe o nome do usuário e a senha (exemplo: ddd, ddd)
+
+      CONNECT ddd ddd
+      # informe o nome do usuário e a senha (exemplo: ddd,ddd)
+
+      PWD
+      # Mostra o diretório atual do cliente no servidor
+
+      CHDIR Bleach 
+      # Muda o diretório atual do cliente no servidor para o diretório Bleach
+
+      GETFILE
+      # Mostra a quantidade de arquivos do diretório atual do cliente no servidor 
+      
+      CHDIR ..
+      # Muda o diretório atual do cliente no servidor para o diretório anterior
+
+      GETDIR
+      # Mostra a quantidade de diretórios do diretório atual do cliente no servidor
+
+   ```
+---
+
+## Execução dos Arquivos Questão 2
 
 ### FileServer.py
 
