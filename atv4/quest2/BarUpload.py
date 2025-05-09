@@ -11,7 +11,6 @@ class BarUpload:
     def show_progress(self):
         """Display the current upload progress."""
         if self.download<=100:
-            progress=len(str(self.download))
             print(f"{self.download}"+"% "+"[",end="")
             self.__printbarpercentage("=",int(self.download))
             self.__printbarpercentage("-",int(100-self.download))
