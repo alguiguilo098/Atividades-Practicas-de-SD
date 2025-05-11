@@ -11,9 +11,16 @@ class SocketUDPServer:
         self.__logs.writeInfo("GET NAME AND SIZE OF FILE")
         listmetadata=nameandsizefile.decode().split(":")
         self.__map["name"]=listmetadata[0]
-        self.__map["size"]=listmetadata[1]
+        self.__map["size"]=int(listmetadata[1])
 
+        self.__map["file"]=open(f"./Server/Images/{self.__map["name"]}","wb")
         
+        i=0
+        while i<self.__map["size"]:
+            block=self.__socket.recv(1024)
+            self.__logs.writeInfo("GET PACKET")
+            self.__map["file"].write(block)
+            i+=1024
 
         print(self.__map)
     def __recivebytes(self):

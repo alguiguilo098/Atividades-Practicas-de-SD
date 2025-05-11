@@ -17,9 +17,11 @@ class ClientMenu:
         with open(path, "rb") as f:
             while True:
                 block=f.read(1024)
+                if not block:
+                    break
                 self.__socket.sendto(block)
+                self.__barload.upload(1024)
                 time.sleep(0.5)
-        print(bloco)
 
             
         
@@ -87,6 +89,7 @@ class ClientMenu:
     def __send_file(self):
         namefile=input("Nome do Arquivo:")
         self.__send_metadata_file(namefile)
+        self.__send_data_file(os.path.join(self.__path,namefile))
 
     def __close_client(self):
         print("Desalocando Recursos...")
