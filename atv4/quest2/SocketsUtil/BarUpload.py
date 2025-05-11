@@ -17,7 +17,7 @@ class BarUpload:
         self.partofimg:int=partofimg # packet of image and file
         self.download:int=0 # percentage dowload
         self.bar=[] # bar progress
-    def show_progress(self):
+    def __show_progress(self):
         """Display the current upload progress."""
         if self.download<=100:
             print(f"{self.download}"+"% "+"[",end="")
@@ -39,6 +39,7 @@ class BarUpload:
             self.sizefile.append(sizebytedowliad)
             tam=len(self.sizefile) # qtd of packet img
             self.download=int((tam/self.partofimg)*100) # percentage
+            self.__show_progress()
         else:
             #show mensage uploads
             self.__finish_upload()

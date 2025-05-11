@@ -12,7 +12,7 @@ import logging
 class Log:
     def __init__(self, path, level=logging.INFO):
         # Isso é feito apenas para garantir que o arquivo exista
-        with open(path, mode="a+"):  
+        with open(path, mode="w"):  
             print("Criando arquivo de log ...")
         
         # Configura o sistema de logging para registrar mensagens em arquivo
