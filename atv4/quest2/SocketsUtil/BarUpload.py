@@ -36,10 +36,14 @@ class BarUpload:
                 self.bar.append(icon)
     def upload(self,sizebytedowliad:bytes):
         if self.download<=100:
+            # show bar upload 0...100
             self.sizefile.append(sizebytedowliad)
             tam=len(self.sizefile) # qtd of packet img
-            self.download=int((tam/self.partofimg)*100) # percentage
-            self.__show_progress()
+            aux=int((tam/self.partofimg)*100) # percentage
+            if aux!=self.download and aux%5==0:
+                # show download progress
+                self.__show_progress()
+            self.download=aux
         else:
             #show mensage uploads
             self.__finish_upload()

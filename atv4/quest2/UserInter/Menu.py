@@ -10,8 +10,8 @@ class ClientMenu:
     def __checksum(self,path):
         with open(path, "rb") as f:
             dados = f.read()
-        hash_sha1 = sha1(dados).hexdigest()
-        return hash_sha1
+        hash_sha1 = sha1(dados).digest()
+        self.__socket.sendto(hash_sha1)
     
     def __send_data_file(self,path):
         with open(path, "rb") as f:
@@ -30,13 +30,10 @@ class ClientMenu:
         abspath=os.path.join(self.__path,namefile)
         stat=os.stat("".join(abspath)).st_size
         filesize=str(stat)
-
-        self.__barload=BarUpload([],(stat/1048)+3)
+        self.__barload=BarUpload([],(stat/1048)+1)
         name=abspath.split("/")[-1]
         nameandsize=name+":"+filesize
-        
         self.__socket.sendto(nameandsize.encode())
-
         self.__barload.upload(1024)
         
 
@@ -86,18 +83,19 @@ class ClientMenu:
             print(f"nome:{i}    tamanho do arquivo:{filesize.st_size} Bytes    quantidade de pacotes (1024 bytes):{int((filesize.st_size/1024)+3)}")
         print("\n")
 
-    def __send_file(self):
+    def __send_file(self)->None:
         namefile=input("Nome do Arquivo:")
         self.__send_metadata_file(namefile)
-        self.__send_data_file(os.path.join(self.__path,namefile))
-
+        pathabs=os.path.join(self.__path,namefile)
+        self.__send_data_file(pathabs)
+        self.__checksum(pathabs)
+        print(self.__socket.recive(1024).decode())
+        
     def __close_client(self):
         print("Desalocando Recursos...")
         time.sleep(1)
-
         print("Desligando Conexeções...")
         time.sleep(1)
-
         sys.exit()
 
     def run(self):
