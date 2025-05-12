@@ -13,7 +13,9 @@ class Log:
     def __init__(self, path, level=logging.INFO):
         # Isso é feito apenas para garantir que o arquivo exista
         with open(path, mode="+a"):  
-            print("Criando arquivo de log ...")
+            print("Configurando Servidor...")
+            print("Criando arquivo de log...")
+            print("Incializando Servidor...")
         
         # Configura o sistema de logging para registrar mensagens em arquivo
         logging.basicConfig(

@@ -3,6 +3,15 @@ from SocketsUtil.Log import Log
 import socket
 import os
 from hashlib import sha1
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
+
+# Create: 24-04-2025 
+# Last modified: 27-04-2025
+
+# Description:SocketUDPServer is a simple UDP-based server that receives files from a client, 
+# logs events, validates the file integrity using SHA-1 checksum, and confirms successful transfer 
+# or error to the client.
 
 class SocketUDPServer:
     """
