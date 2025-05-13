@@ -26,7 +26,43 @@ O arquivo é dividido em partes de até 1024 bytes. O servidor deve validar a in
 se estiver tudo certo, salvar o arquivo. Também há  log de transferências, barra de progresso.
 
 
-## Executar a Aplicação
+## Executando Sistema de envio de arquivos via UDP
+
+1. Acesse o diretório que contém os códigos do cliente e do servidor do sistema de arquivos utilizando o seguinte comando no terminal:
+
+```bash
+cd quest2/
+```
+
+2. Em seguida, execute o servidor utilizando o comando abaixo, substituindo `<ip>` e `<port>` pelo endereço IP e pela porta desejados:
+
+```bash
+python Server.py <ip>:<port>
+```
+
+3. Em seguida, excute o Cliente utilizando o seguinte comando abaixo:
+
+```bash
+    python Cliente.py
+``` 
+
+### Operações do Sistema de Arquivos via UDP
+O cliente implementa as seguintes operações principais:
+
+1. **Configurar IP e porta do servidor**
+   Permite definir os parâmetros de conexão com o servidor remoto.
+
+2. **Enviar arquivos ao servidor**
+   Transfere arquivos do cliente para o servidor utilizando o protocolo UDP.
+
+3. **Listar arquivos locais**
+   Exibe os arquivos disponíveis no diretório local do cliente.
+
+4. **Encerrar o cliente**
+   Finaliza a aplicação e encerra a conexão com o servidor.
+
+    **OBS**: Digite o numero da operação
+    
 ## Execução do chat P2P UDP
 
 ### peer.py
