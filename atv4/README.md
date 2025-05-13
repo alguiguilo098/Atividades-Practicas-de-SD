@@ -1,4 +1,3 @@
-
 #Atividade 02 – Sockets UDP
 
 Trabalho desenvolvido para a disciplina Sistemas Distribuídos, ministrada pelo professor Rodrigo Campiolo. 
@@ -46,6 +45,7 @@ python3 peer.py
 
 
 =======
+
 ## Execução do chat P2P UDP
 
 ### peer.py
