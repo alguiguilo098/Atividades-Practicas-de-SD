@@ -1,0 +1,27 @@
+nmap 192.168.1.1	            Scan a single IP
+nmap 192.168.1.1 192.168.2.1    Scan specific IPs
+nmap 192.168.1.1-254	        Scan a range
+nmap scanme.nmap.org	        Scan a domain
+
+
+nmap 192.168.1.1 -sS           TCP SYN port scan (Default)
+nmap 192.168.1.1 -sT           TCP connect port scan (Default without root privilege)
+nmap 192.168.1.1 -sU	       UDP port scan
+
+nmap 192.168.1.1/24 -sn        Disable port scanning. Host discovery only.
+nmap 192.168.1.1-5 -Pn         Disable host discovery. Port scan only.
+
+nmap 192.168.1.1 -p 21	Port scan for port x
+nmap 192.168.1.1 -p 21-100	Port range
+nmap 192.168.1.1 -p- Scan all ports
+
+nmap 192.168.1.1 -s Attempts to determine the version of the service running on port
+nmap 192.168.1.1 -O Remote OS detection using TCP/IP stack fingerprinting
+nmap 192.168.1.1 -V Return Version of Softwares 
+
+nmap 192.168.1.1 -T0	Paranoid (0) Intrusion Detection System evasion
+nmap 192.168.1.1 -T1	Sneaky (1) Intrusion Detection System evasion
+nmap 192.168.1.1 -T2	Polite (2) slows down the scan to use less bandwidth and use less target machine resources
+nmap 192.168.1.1 -T3	Normal (3) which is default speed
+nmap 192.168.1.1 -T4	Aggressive (4) speeds scans; assumes you are on a reasonably fast and reliable network
+nmap 192.168.1.1 -T5	Insane (5) speeds scan; assumes you are on an extraordinarily fast network
