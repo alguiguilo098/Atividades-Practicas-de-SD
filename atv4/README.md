@@ -1,3 +1,4 @@
+
 #Atividade 02 – Sockets UDP
 
 Trabalho desenvolvido para a disciplina Sistemas Distribuídos, ministrada pelo professor Rodrigo Campiolo. 
@@ -27,4 +28,36 @@ se estiver tudo certo, salvar o arquivo. Também há  log de transferências, ba
 
 
 ## Executar a Aplicação
+## Execução do chat P2P UDP
 
+### peer.py
+Programa que implementa um peer individual. Para adicionar mais peers abram outros terminais e execute o comando a baixo e siga as instruções que o progama pedir
+
+**Como excutar:**
+```bash
+python3 peer.py
+```
+
+##Bibliotecas Utilizadas
+- socket
+- struct
+- emoji
+- threading
+
+
+=======
+## Execução do chat P2P UDP
+
+### peer.py
+Programa que implementa um peer individual. Para adicionar mais peers abram outros terminais e execute o comando a baixo e siga as instruções que o progama pedir
+
+**Como excutar:**
+```bash
+python3 peer.py
+```
+
+##Bibliotecas Utilizadas
+- socket
+- struct
+- emoji
+- threading
