@@ -41,9 +41,13 @@ class MovieServer:
         
         try:
             while True:
-                tamanho_bytes = self.socket.recv(4)
+                print("c")
+                tamanho_bytes = client.recv(4)
+                print("ca")
                 tamanho = int.from_bytes(tamanho_bytes, byteorder="big")
-                pedido_empacotado = self.socket.recv(tamanho)
+                print("cal")
+                pedido_empacotado = client.recv(tamanho)
+                print("calvo")
 
                 if len(pedido_empacotado) < tamanho:
                     print("Mensagem incompleta recebida")
@@ -65,6 +69,7 @@ class MovieServer:
                         self.delete_filme(self, pedido.filme)    
 
         except Exception as e:
+            print("socket calvo")
             print(e)
 
     def get_filmes(self, atores=[], generos=[]):
@@ -183,9 +188,9 @@ class MovieServer:
 
 
 if __name__ == '__main__':
-    m = MovieServer()
+    m = MovieServer(host="10.1.5.132",port=5000)
     try:
-        m.client.admin.command('ping')
+        m.client.admin.command('ping') 
         # print('Monke')
     except Exception as e:
         print(e)
