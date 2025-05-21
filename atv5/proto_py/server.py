@@ -109,7 +109,7 @@ class MovieServer:
             error_msg = f"Error: The following fields are required: {campo_vazios}"
             self.send_response(False, cliente=cliente, mensagem=error_msg)
             return
-        print("Campos vazios !!!")
+        
         # Build MongoDB document
         filme_documento = {
             "titulo": filme.titulo,
@@ -183,25 +183,26 @@ class MovieServer:
         # Serialize movie list into response
         if sucesso and filmes:
             for f in filmes:
-                print(f)
-                filme_pb = pedido_resposta.filme.add()  # Adiciona uma nova instância na lista
-                print(f)
+                filme_pb = pedido_resposta.filmes.add()
                 filme_pb.id = str(f["_id"])
-                print(f)
                 filme_pb.titulo = f["titulo"]
-                print(f)
                 filme_pb.ano = f["ano"]
                 filme_pb.duracao = f["duracao"]
                 filme_pb.diretores.extend(f["diretores"])
-                print(f)
                 filme_pb.atores.extend(f["atores"])
                 filme_pb.generos.extend(f["generos"])
-                print(f)
-        print("serelized")
         resposta_byte = pedido_resposta.SerializeToString()
+    
         print(type(resposta_byte))
-        cliente.sendall(len(resposta_byte).to_bytes(4, byteorder="big"))
+        size = len(resposta_byte)
+        print(size)
+
+        # Envia corretamente os 4 bytes do tamanho
+        cliente.sendall(size.to_bytes(4, byteorder="big"))
+
+        # Envia a mensagem serializada
         cliente.sendall(resposta_byte)
+
 
 # Entry point
 if __name__ == '__main__':

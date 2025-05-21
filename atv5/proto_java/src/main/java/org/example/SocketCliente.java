@@ -22,7 +22,7 @@ public class SocketCliente {
 
     private Socket cliente;
     private OutputStream out;
-    private InputStream in;
+    private DataInputStream in;
 
     // Constructor - connects to the given address and port
     public SocketCliente(String endereco, int porta) {
@@ -33,7 +33,7 @@ public class SocketCliente {
 
             // Get output and input streams from the socket
             this.out = cliente.getOutputStream();
-            this.in = cliente.getInputStream();
+            this.in = new DataInputStream(cliente.getInputStream());
 
         } catch (UnknownHostException e) {
             System.err.println("Unknown address: " + e.getMessage());
@@ -65,20 +65,21 @@ public class SocketCliente {
     // Receives a PedidoResposta response from the server
     public PedidoResposta receiveFilmeResponse() {
         try {
-            byte[] tambyt = new byte[1];
-            in.read(tambyt);  // Read 1 byte indicating the message size
-            int size = tambyt[0];
+            // Lê os 4 bytes do tamanho
+            byte[] sizeBytes = new byte[4];
+            in.readFully(sizeBytes);
 
-            // Read the message bytes
+            // Converte para int
+            int size = ((sizeBytes[0] & 0xFF) << 24) |
+                    ((sizeBytes[1] & 0xFF) << 16) |
+                    ((sizeBytes[2] & 0xFF) << 8)  |
+                    (sizeBytes[3] & 0xFF);
+
+            // Lê os bytes da mensagem
             byte[] buffer = new byte[size];
-            int bytesRead = in.read(buffer, 0, size);
+            in.readFully(buffer);
 
-            if (bytesRead == -1) {
-                System.err.println("Connection closed by server.");
-                return null;
-            }
-
-            // Parse the response from the buffer
+            // Parse com Protobuf
             return PedidoResposta.parseFrom(buffer);
         } catch (IOException e) {
             System.err.println("Error receiving response: " + e.getMessage());

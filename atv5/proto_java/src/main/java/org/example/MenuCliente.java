@@ -85,7 +85,7 @@ class MenuCliente {
         System.out.println("Enviado Recebendo Resposta ...");
         PedidoResposta response=socket.receiveFilmeResponse();
 
-        System.out.println(response);
+        System.out.println(response.getErro());
     }
 
     private void getfilme() {
@@ -96,6 +96,7 @@ class MenuCliente {
         socket.sendFilmeRequest(pedido);
 
         PedidoResposta response=socket.receiveFilmeResponse();
+
     }
 
     private void delete_filme() {
