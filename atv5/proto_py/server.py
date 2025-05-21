@@ -65,21 +65,20 @@ class MovieServer:
                 match pedido.tipo_requisicao:
                     case 0:
                         print("GET movies")
-                        self.get_filmes(pedido.atores, pedido.generos)
+                        self.get_filmes(cliente=client,pedido=pedido.atores,atores=pedido.generos)
                     case 1:
-                        print("POST movie")
                         self.create_filme(cliente=client, filme=pedido.filme)
                     case 2:
                         print("UPDATE movie")
-                        self.update_filme(pedido.filme)
+                        self.update_filme(cliente=client,pedido=pedido.filme)
                     case 3: 
                         print("DELETE movie")
-                        self.delete_filme(pedido.filme)
+                        self.delete_filme(cliente=client,filme=pedido.filme)
                 print("OK")
         except Exception as e:
             print(e)
 
-    def get_filmes(self, atores=[], generos=[]):
+    def get_filmes(self,cliente, atores=[], generos=[]):
         # Build MongoDB query based on filters
         query = {}
         if atores:
@@ -89,7 +88,7 @@ class MovieServer:
 
         filmes_lista = list(self.collection.find(query))
         message = "Request successful." if filmes_lista else "Request successful: No records found."
-        self.send_response(True, filmes_lista, message)
+        self.send_response(True,cliente=cliente,filmes=filmes_lista,mensagem=message)
 
     def create_filme(self, cliente, filme):
         # Validate required fields
@@ -129,7 +128,7 @@ class MovieServer:
         self.send_response(filme_inserido is not None, cliente, [filme_inserido] if filme_inserido else None, mensagem)
         print("tudo certo")
 
-    def delete_filme(self, filme):
+    def delete_filme(self,cliente,filme):
         if filme.id == "":
             self.send_response(False, None, mensagem="DELETE ERROR: Movie _id is required")
             return
@@ -137,11 +136,11 @@ class MovieServer:
         # Delete by ID
         filme_target = self.collection.delete_one({"_id": ObjectId(filme.id)})
         if filme_target.deleted_count == 0:
-            self.send_response(True, None, mensagem="DELETE: No movie found with the provided _id")
+            self.send_response(True,cliente,None, mensagem="DELETE: No movie found with the provided _id")
         else:
-            self.send_response(True, None, mensagem="Movie successfully deleted")
+            self.send_response(True,cliente, None,mensagem="Movie successfully deleted")
 
-    def update_filme(self, filme):
+    def update_filme(self,cliente,filme):
         campo_vazios = []
         if filme.id == "":
             campo_vazios.append("_id")
@@ -158,7 +157,7 @@ class MovieServer:
 
         if campo_vazios:
             error_msg = f"Error: The following fields are required: {campo_vazios}"
-            self.send_response(False, None, mensagem=error_msg)
+            self.send_response(False, None,cliente, mensagem=error_msg)
             return
 
         # Update movie
@@ -173,7 +172,7 @@ class MovieServer:
         filme_editado = self.collection.find_one_and_update({"_id": ObjectId(filme.id)}, {"$set": update_data}, return_document=True)
         self.send_response(True, [filme_editado] if filme_editado else None, mensagem="Movie updated")
 
-    def send_response(self, sucesso, cliente=None, filmes=None, mensagem=None):
+    def send_response(self, sucesso, cliente, filmes=None, mensagem=None):
         pedido_resposta = mflix_pb2.PedidoResposta()
         pedido_resposta.sucesso = sucesso
         print("teste")
@@ -199,7 +198,7 @@ class MovieServer:
 
         # Envia corretamente os 4 bytes do tamanho
         cliente.sendall(size.to_bytes(4, byteorder="big"))
-
+        print("send")
         # Envia a mensagem serializada
         cliente.sendall(resposta_byte)
 
