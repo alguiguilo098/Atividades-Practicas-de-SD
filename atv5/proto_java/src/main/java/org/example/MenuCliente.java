@@ -30,7 +30,6 @@ class MenuCliente {
     }
     private void show_menu(){
         System.out.println("1- Criar Filme ");
-        System.out.println("2- Pegar Filme por id");
         System.out.println("3- Deletar Filme");
         System.out.println("4- Atualizar Filme");
         System.out.println("5- Listar por gênero");
@@ -93,8 +92,9 @@ class MenuCliente {
         String id=sca.next();
         Filme filme=Filme.newBuilder().setId(id).build();
         FilmePedido pedido =this.operations.get_filme_id(filme);
+        System.out.println("Enviado Requisição ...");
         socket.sendFilmeRequest(pedido);
-
+        System.out.println("Enviado Recebendo Resposta ...");
         PedidoResposta response=socket.receiveFilmeResponse();
 
     }
@@ -104,10 +104,13 @@ class MenuCliente {
         String id=sca.next();
         Filme filme=Filme.newBuilder().setId(id).build();
         FilmePedido pedido =this.operations.delete_filme(filme);
-        socket.sendFilmeRequest(pedido);
-        socket.receiveFilmeResponse();
 
+        System.out.println("Enviado Requisição ...");
+        socket.sendFilmeRequest(pedido);
+        System.out.println("Enviado Recebendo Resposta ...");
         PedidoResposta response=socket.receiveFilmeResponse();
+
+        System.out.println(response.getErro());
     }
     private void get_actors_movie(){
         System.out.print("actors:");
