@@ -41,31 +41,34 @@ class MovieServer:
         
         try:
             while True:
-                print("c")
-                tamanho_bytes = client.recv(4)
-                print("ca")
-                tamanho = int.from_bytes(tamanho_bytes, byteorder="big")
-                print("cal")
-                pedido_empacotado = client.recv(tamanho)
-                print("calvo")
 
+                tamanho_bytes = client.recv(4)
+                tamanho = int.from_bytes(tamanho_bytes, byteorder="big")
+                pedido_empacotado = client.recv(tamanho)
+
+                print(tamanho_bytes)
+                print(pedido_empacotado)
                 if len(pedido_empacotado) < tamanho:
                     print("Mensagem incompleta recebida")
                     '''Envia a Resposta de erro'''
-                    self.send_response(False,mensagem="Erro no envio do pedido")
+                    self.send_response(False,cliente=client,filmes=None,mensagem="Erro no envio do pedido")
                     continue
 
                 pedido = mflix_pb2.FilmePedido()
                 pedido.ParseFromString(pedido_empacotado)
-
+                print("CHEGUEI")
                 match pedido.tipo_requisicao:
                     case 0:
-                        self.get_filmes(pedido.atores, pedido.generos)
+                        print("get filmes")
+                        self.get_filmes(pedido.atores,pedido.generos)
                     case 1:
-                        self.create_filme(pedido.filme)
+                        print("create filmes")
+                        self.create_filme(cliente=client,filme=pedido.filme,)
                     case 2:
+                        print("atualizar filme")
                         self.update_filme(self, pedido.filme)
                     case 3: 
+                        print("delte filme")
                         self.delete_filme(self, pedido.filme)    
 
         except Exception as e:
@@ -89,7 +92,7 @@ class MovieServer:
 
         self.send_response(True,filmes_lista,message)
 
-    def create_filme(self, filme):
+    def create_filme(self,cliente,filme):
         campo_vazios = []
         
         if filme.titulo == "":
@@ -102,12 +105,13 @@ class MovieServer:
             campo_vazios.append("generos")
         if filme.duracao == None:
             campo_vazios.append("duracao")
-
+        print(campo_vazios)
         if len(campo_vazios) > 0:
             error_msg = f"Erro ao criar filme: {campo_vazios} são necessários serem preenchidos"
-            self.send_response(False, mensagem=error_msg)
+            print("calvo")
+            self.send_response(False,cliente=cliente,mensagem=error_msg)
             return
-        
+        print("cheguei aqui")
         filme_documento ={
             "titulo":filme.titulo,
             "diretores":list(filme.diretores),
@@ -116,12 +120,17 @@ class MovieServer:
             "generos": list(filme.generos),
             "duracao": filme.duracao,
         }
+        print("opt opt")
         filme_inserido_id = self.collection.insert_one(filme_documento).inserted_id
+        print("mongo")
         filme_inserido = self.collection.find_one({"_id": filme_inserido_id})
         if filme_inserido:
             mensagem = "Filme criado com sucesso"
+            print(mensagem)
             self.send_response(True, filme_inserido, mensagem)
+            print("Deu Certo Grande Calvo")
         else:
+            print("calvo calvo")
             mensagem = "Erro ao criar a mensagem"
             self.send_response(False, filme_inserido, mensagem)
 
@@ -163,7 +172,7 @@ class MovieServer:
 
         self.send_response(True,filme_editado)
 
-    def send_response(self, sucesso, filmes=None, mensagem=None):
+    def send_response(self, sucesso,cliente, filmes=None, mensagem=None):
         pedido_resposta = mflix_pb2.PedidoResposta()
         pedido_resposta.sucesso = sucesso
 
@@ -181,14 +190,14 @@ class MovieServer:
                 filme.atores.extend(f.atores)
                 filme.generos.extend(f.generos)
 
-
+        
         resposta_byte = pedido_resposta.SerializeToString()
-        self.socket.sendall(len(resposta_byte).to_bytes(4, byteorder="big"))
-        self.socket.sendall(resposta_byte)
+        cliente.sendall(len(resposta_byte).to_bytes(4, byteorder="big"))
+        cliente.sendall(resposta_byte)
 
 
 if __name__ == '__main__':
-    m = MovieServer(host="10.1.5.132",port=5000)
+    m = MovieServer(host="192.168.237.134",port=5000)
     try:
         m.client.admin.command('ping') 
         # print('Monke')
