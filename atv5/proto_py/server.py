@@ -6,227 +6,209 @@ import mflix_pb2
 import datetime
 from bson import ObjectId
 
-class MovieServer:
-    def __init__(self, host='10.1.4.212', port=5000):
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
+# Create: 16-05-2025
+# Last modified: 21-05-2025
+# This code implements a TCP server that listens for movie-related requests (such as retrieving,
+# creating, updating, and deleting movies) using MongoDB as the database.
 
-        '''Configurações do socket'''
+class MovieServer:
+    def __init__(self, host="0.0.0.0", port=5000):
+        # Socket configuration
         self.host = host
         self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
 
-        '''Configurações para o mongodb api'''
-        uri = "mongodb+srv://admin:admin@mflix.xk8ftcw.mongodb.net/?retryWrites=true&w=majority&appName=mflix"
+        # MongoDB connection settings
+        #uri = "mongodb+srv://admin:admin@mflix.xk8ftcw.mongodb.net/?retryWrites=true&w=majority&appName=mflix"
+        uri="mongodb+srv://admin:admin@mflix.7jieeqw.mongodb.net/?retryWrites=true&w=majority&appName=Mflix"
         self.client = MongoClient(uri, server_api=ServerApi('1'))
-        self.db = self.client['mflix']
+        self.db = self.client['Mflix']
         self.collection = self.db['movies']
 
     def run(self):
+        # Bind and listen on the specified host and port
         self.socket.bind((self.host, self.port))
         self.socket.listen()
-        print("Servidor Iniciado esperando conexões..")
+        print("Server started, waiting for connections...")
         try:
             while True:
                 client, addr = self.socket.accept()
-                print(f"Conexão com {addr} estabelecida")
+                print(f"Connection established with {addr}")
+                # Each client is handled in a new thread
                 thread = threading.Thread(target=self.handle_connection, args=(client, addr))
                 thread.start()
-
         except KeyboardInterrupt:
-            print("Fechando conexão...")
+            print("Shutting down server...")
             self.socket.close()
             self.client.close()
-    
+
     def handle_connection(self, client, addr):
-        
         try:
             while True:
-
+                # Read the size of the incoming request (4 bytes)
                 tamanho_bytes = client.recv(4)
                 tamanho = int.from_bytes(tamanho_bytes, byteorder="big")
                 pedido_empacotado = client.recv(tamanho)
-
-                print(tamanho_bytes)
-                print(pedido_empacotado)
+                print("OK")
                 if len(pedido_empacotado) < tamanho:
-                    print("Mensagem incompleta recebida")
-                    '''Envia a Resposta de erro'''
-                    self.send_response(False,cliente=client,filmes=None,mensagem="Erro no envio do pedido")
+                    # Incomplete request received
+                    self.send_response(False, cliente=client, filmes=None, mensagem="Incomplete request received.")
                     continue
-
+                
                 pedido = mflix_pb2.FilmePedido()
                 pedido.ParseFromString(pedido_empacotado)
-                print("CHEGUEI")
+                print("OK")
+                # Handle request type
                 match pedido.tipo_requisicao:
                     case 0:
-                        print("get filmes")
-                        self.get_filmes(pedido.atores,pedido.generos)
+                        print("GET movies")
+                        self.get_filmes(pedido.atores, pedido.generos)
                     case 1:
-                        print("create filmes")
-                        self.create_filme(cliente=client,filme=pedido.filme,)
+                        print("POST movie")
+                        self.create_filme(cliente=client, filme=pedido.filme)
                     case 2:
-                        print("atualizar filme")
-                        self.update_filme(self, pedido.filme)
+                        print("UPDATE movie")
+                        self.update_filme(pedido.filme)
                     case 3: 
-                        print("delte filme")
-                        self.delete_filme(self, pedido.filme)    
-
+                        print("DELETE movie")
+                        self.delete_filme(pedido.filme)
+                print("OK")
         except Exception as e:
-            print("socket calvo")
             print(e)
 
     def get_filmes(self, atores=[], generos=[]):
-
+        # Build MongoDB query based on filters
         query = {}
-        message = "" 
         if atores:
             query["atores"] = {"$in": atores}
         if generos:
             query["generos"] = {"$in": generos}
 
         filmes_lista = list(self.collection.find(query))
-        if len(filmes_lista) == 0:
-            message = "Requisição sucedida: Banco de Dados vazio."
-        else:
-            message = "Requisição sucedida."
+        message = "Request successful." if filmes_lista else "Request successful: No records found."
+        self.send_response(True, filmes_lista, message)
 
-        self.send_response(True,filmes_lista,message)
-
-    def create_filme(self,cliente,filme):
+    def create_filme(self, cliente, filme):
+        # Validate required fields
         campo_vazios = []
-        
         if filme.titulo == "":
             campo_vazios.append("titulo")
-        if filme.diretores == []:
+        if not filme.diretores:
             campo_vazios.append("diretores")
-        if filme.atores == []:
+        if not filme.atores:
             campo_vazios.append("atores")
-        if filme.generos == []:
+        if not filme.generos:
             campo_vazios.append("generos")
-        if filme.duracao == None:
+        if filme.duracao == 0:
             campo_vazios.append("duracao")
-        print(campo_vazios)
-        if len(campo_vazios) > 0:
-            error_msg = f"Erro ao criar filme: {campo_vazios} são necessários serem preenchidos"
-            print("calvo")
-            self.send_response(False,cliente=cliente,mensagem=error_msg)
+
+        if campo_vazios:
+            error_msg = f"Error: The following fields are required: {campo_vazios}"
+            self.send_response(False, cliente=cliente, mensagem=error_msg)
             return
-        print("cheguei aqui")
-        filme_documento ={
-            "titulo":filme.titulo,
-            "diretores":list(filme.diretores),
+        print("Campos vazios !!!")
+        # Build MongoDB document
+        filme_documento = {
+            "titulo": filme.titulo,
+            "diretores": list(filme.diretores),
             "ano": datetime.date.today().year,
             "atores": list(filme.atores),
             "generos": list(filme.generos),
             "duracao": filme.duracao,
         }
-        print("opt opt")
+        print("inicializar")
+        # Insert and fetch new movie
         filme_inserido_id = self.collection.insert_one(filme_documento).inserted_id
-        print("mongo")
+        print("insert one")
         filme_inserido = self.collection.find_one({"_id": filme_inserido_id})
-        if filme_inserido:
-            mensagem = "Filme criado com sucesso"
-            print(mensagem)
-            self.send_response(True, filme_inserido, mensagem)
-            print("Deu Certo Grande Calvo")
-        else:
-            print("calvo calvo")
-            mensagem = "Erro ao criar a mensagem"
-            self.send_response(False, filme_inserido, mensagem)
+        print("find one")
+        mensagem = "Movie successfully created" if filme_inserido else "Failed to create movie"
+        self.send_response(filme_inserido is not None, cliente, [filme_inserido] if filme_inserido else None, mensagem)
+        print("tudo certo")
 
     def delete_filme(self, filme):
-        
         if filme.id == "":
-            self.send_response(False, filme,"ERRO DELETE: É necessário especificar um _id de filme")
+            self.send_response(False, None, mensagem="DELETE ERROR: Movie _id is required")
             return
 
-        filme_target = self.collection.delete_one({"_id":filme.id})
-
-        if filme_target:
-            pass
+        # Delete by ID
+        filme_target = self.collection.delete_one({"_id": ObjectId(filme.id)})
+        if filme_target.deleted_count == 0:
+            self.send_response(True, None, mensagem="DELETE: No movie found with the provided _id")
         else:
-            self.send_response(True,filme,"DELETE: Não existe um filme com o _id oferecido")
+            self.send_response(True, None, mensagem="Movie successfully deleted")
 
     def update_filme(self, filme):
         campo_vazios = []
-        
         if filme.id == "":
             campo_vazios.append("_id")
         if filme.titulo == "":
             campo_vazios.append("titulo")
-        if filme.diretores == []:
+        if not filme.diretores:
             campo_vazios.append("diretores")
-        if filme.atores == []:
+        if not filme.atores:
             campo_vazios.append("atores")
-        if filme.generos == []:
+        if not filme.generos:
             campo_vazios.append("generos")
-        if filme.duracao == None:
+        if filme.duracao == 0:
             campo_vazios.append("duracao")
 
-        if len(campo_vazios) > 0:
-            error_msg = f"Erro ao criar filme: {campo_vazios} são necessários serem preenchidos"
-            self.send_response(False, mensagem=error_msg)
+        if campo_vazios:
+            error_msg = f"Error: The following fields are required: {campo_vazios}"
+            self.send_response(False, None, mensagem=error_msg)
             return
-        
-        filme_editado = self.collection.find_one_and_update({"_id": filme.id}, filme)
 
-        self.send_response(True,filme_editado)
+        # Update movie
+        update_data = {
+            "titulo": filme.titulo,
+            "diretores": list(filme.diretores),
+            "atores": list(filme.atores),
+            "generos": list(filme.generos),
+            "duracao": filme.duracao,
+        }
 
-    def send_response(self, sucesso,cliente, filmes=None, mensagem=None):
+        filme_editado = self.collection.find_one_and_update({"_id": ObjectId(filme.id)}, {"$set": update_data}, return_document=True)
+        self.send_response(True, [filme_editado] if filme_editado else None, mensagem="Movie updated")
+
+    def send_response(self, sucesso, cliente=None, filmes=None, mensagem=None):
         pedido_resposta = mflix_pb2.PedidoResposta()
         pedido_resposta.sucesso = sucesso
-
+        print("teste")
         if mensagem:
             pedido_resposta.mensagem = mensagem
-        
+        print("movie list")
+        # Serialize movie list into response
         if sucesso and filmes:
-            # pedido_resposta.filme = 
             for f in filmes:
-                filme = pedido_resposta.filme.add()
-                filme.id = f.id
-                filme.ano = f.ano
-                filme.duracao = f.duracao
-                filme.diretores.extend(f.diretores)
-                filme.atores.extend(f.atores)
-                filme.generos.extend(f.generos)
-
-        
+                print(f)
+                filme_pb = pedido_resposta.filme.add()  # Adiciona uma nova instância na lista
+                print(f)
+                filme_pb.id = str(f["_id"])
+                print(f)
+                filme_pb.titulo = f["titulo"]
+                print(f)
+                filme_pb.ano = f["ano"]
+                filme_pb.duracao = f["duracao"]
+                filme_pb.diretores.extend(f["diretores"])
+                print(f)
+                filme_pb.atores.extend(f["atores"])
+                filme_pb.generos.extend(f["generos"])
+                print(f)
+        print("serelized")
         resposta_byte = pedido_resposta.SerializeToString()
+        print(type(resposta_byte))
         cliente.sendall(len(resposta_byte).to_bytes(4, byteorder="big"))
         cliente.sendall(resposta_byte)
 
-
+# Entry point
 if __name__ == '__main__':
-    m = MovieServer(host="192.168.237.134",port=5000)
+    m = MovieServer()
     try:
-        m.client.admin.command('ping') 
-        # print('Monke')
+        m.client.admin.command('ping')
     except Exception as e:
         print(e)
 
     m.run()
-
-
-    # collection = db["movies"]
-    # movie = {
-    #     "plot":"Monke goes monke",
-    #     "genre":["monke","banana"],
-    #     "cast":["orangutan","chipamzee"],
-    #     "title":"The monkee",
-    #     "fullplot":"Ooh ooh ahh ahh, banana gib orangutan. But chipamzee ate banana instead",
-    #     "countries":["behind you"],
-    #     "released": datetime.datetime.now(tz=datetime.timezone.utc),
-    #     "directors":["gorilla","baboon"],
-    #     "rated":"UNRATED",
-    #     "lastupdated": datetime.datetime.now(tz=datetime.timezone.utc),
-    #     "year": 2025,
-    #     "type": "movie"
-    # }
-
-    # # db_data = db.movies
-    # # movie_id = db_data.insert_one(movie).inserted_id
-    # # pprint.pprint(movie_id)
-    # req = {"title":"The monkee"}
-    # pprint.pprint(collection.find_one(req))
-
-
