@@ -3,4 +3,6 @@ atv3/quest1/quest1/user.db
 atv3/quest2/logs/**
 atv3/quest2/server_files/**
 atv3/quest2/client_files/**
-
+atv5/proto_py/bin/**
+atv5/proto_py/lib/**
+atv5/proto_py/__pycache__
