@@ -80,6 +80,7 @@ class MovieServer:
                 print("OK")
         except Exception as e:
             print(e)
+            
         
 
     def get_filmes(self,cliente, atores=[], generos=[]):
