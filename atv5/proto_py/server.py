@@ -61,23 +61,16 @@ class MovieServer:
                 
                 pedido = mflix_pb2.FilmePedido()
                 pedido.ParseFromString(pedido_empacotado)
-                print("OK")
                 # Handle request type
                 match pedido.tipo_requisicao:
                     case 0:
-                        print("GET movies")
-                        self.get_filmes(cliente=client,pedido=pedido.atores,atores=pedido.generos)
                         self.get_filmes(cliente=client,atores=list(pedido.atores),generos=list(pedido.generos))
                     case 1:
                         self.create_filme(cliente=client, filme=pedido.filme)
                     case 2:
-                        print("UPDATE movie")
                         self.update_filme(cliente=client,filme=pedido.filme)
                     case 3: 
-                        print("DELETE movie")
                         self.delete_filme(cliente=client,filme=pedido.filme)
-                        self.delete_filme(cliente=client,filme=pedido.filme)
-                print("OK")
         except Exception as e:
             print(e)
             
