@@ -64,11 +64,4 @@ public class ConfigHead {
         return request.build();
     }
 
-    // Constructs a POST request to get a movie by ID (possibly a misnamed method)
-    FilmePedido get_filme_id(Filme body) {
-        FilmePedido.Builder request = FilmePedido.newBuilder();
-        request.setTipoRequisicao(FilmePedido.ReqType.POST);  // Possibly should be GET
-        request.setFilme(body);
-        return request.build();
-    }
 }

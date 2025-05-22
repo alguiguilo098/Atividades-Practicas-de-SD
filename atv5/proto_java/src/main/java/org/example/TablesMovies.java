@@ -5,13 +5,14 @@ import java.util.List;
 
 public class TablesMovies {
 
-    private void print_table(List<Filme> listmovie){
+    static private void print_table(List<Filme> listmovie){
         for(Filme movie:listmovie){
             System.out.println(movie.toString());
         }
     }
     static void show_movie(PedidoResposta pedido){
-
+            List<Filme>lista=pedido.getFilmesList();
+            TablesMovies.print_table(lista);
     }
 
 }

@@ -14,10 +14,10 @@ message Filme {
 
 message FilmePedido {
   enum ReqType {
-    GET = 1;
-    POST = 2;
-    UPDATE = 3;
-    DELETE = 4;
+    GET = 0;
+    POST = 1;
+    UPDATE = 2;
+    DELETE = 3;
   }
 
   ReqType tipo_requisicao = 1;
