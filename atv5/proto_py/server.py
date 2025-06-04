@@ -13,6 +13,10 @@ from bson import ObjectId
 # This code implements a TCP server that listens for movie-related requests (such as retrieving,
 # creating, updating, and deleting movies) using MongoDB as the database.
 
+# MongoDB connection settings
+uri="mongodb+srv://admin:admin@mflix.7jieeqw.mongodb.net/?retryWrites=true&w=majority&appName=Mflix"
+
+
 class MovieServer:
     def __init__(self, host="0.0.0.0", port=5000):
         # Socket configuration
@@ -21,9 +25,6 @@ class MovieServer:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
 
-        # MongoDB connection settings
-        #uri = "mongodb+srv://admin:admin@mflix.xk8ftcw.mongodb.net/?retryWrites=true&w=majority&appName=mflix"
-        uri="mongodb+srv://admin:admin@mflix.7jieeqw.mongodb.net/?retryWrites=true&w=majority&appName=Mflix"
         self.client = MongoClient(uri, server_api=ServerApi('1'))
         self.db = self.client['Mflix']
         self.collection = self.db['movies']
@@ -60,34 +61,33 @@ class MovieServer:
                 
                 pedido = mflix_pb2.FilmePedido()
                 pedido.ParseFromString(pedido_empacotado)
-                print("OK")
                 # Handle request type
                 match pedido.tipo_requisicao:
                     case 0:
-                        print("GET movies")
-                        self.get_filmes(cliente=client,pedido=pedido.atores,atores=pedido.generos)
+                        self.get_filmes(cliente=client,atores=list(pedido.atores),generos=list(pedido.generos))
                     case 1:
                         self.create_filme(cliente=client, filme=pedido.filme)
                     case 2:
-                        print("UPDATE movie")
-                        self.update_filme(cliente=client,pedido=pedido.filme)
+                        self.update_filme(cliente=client,filme=pedido.filme)
                     case 3: 
-                        print("DELETE movie")
                         self.delete_filme(cliente=client,filme=pedido.filme)
-                print("OK")
         except Exception as e:
             print(e)
+            
+        
 
     def get_filmes(self,cliente, atores=[], generos=[]):
         # Build MongoDB query based on filters
         query = {}
         if atores:
+
             query["atores"] = {"$in": atores}
         if generos:
             query["generos"] = {"$in": generos}
 
         filmes_lista = list(self.collection.find(query))
         message = "Request successful." if filmes_lista else "Request successful: No records found."
+        self.send_response(True,cliente=cliente,filmes=filmes_lista,mensagem=message)
         self.send_response(True,cliente=cliente,filmes=filmes_lista,mensagem=message)
 
     def create_filme(self, cliente, filme):
@@ -137,7 +137,9 @@ class MovieServer:
         filme_target = self.collection.delete_one({"_id": ObjectId(filme.id)})
         if filme_target.deleted_count == 0:
             self.send_response(True,cliente,None, mensagem="DELETE: No movie found with the provided _id")
+            self.send_response(True,cliente,None, mensagem="DELETE: No movie found with the provided _id")
         else:
+            self.send_response(True,cliente, None,mensagem="Movie successfully deleted")
             self.send_response(True,cliente, None,mensagem="Movie successfully deleted")
 
     def update_filme(self,cliente,filme):
@@ -158,6 +160,7 @@ class MovieServer:
         if campo_vazios:
             error_msg = f"Error: The following fields are required: {campo_vazios}"
             self.send_response(False, None,cliente, mensagem=error_msg)
+            self.send_response(False, None,cliente, mensagem=error_msg)
             return
 
         # Update movie
@@ -170,7 +173,7 @@ class MovieServer:
         }
 
         filme_editado = self.collection.find_one_and_update({"_id": ObjectId(filme.id)}, {"$set": update_data}, return_document=True)
-        self.send_response(True, [filme_editado] if filme_editado else None, mensagem="Movie updated")
+        self.send_response(True,cliente=cliente ,filmes=[filme_editado] if filme_editado else None, mensagem="Movie updated")
 
     def send_response(self, sucesso, cliente, filmes=None, mensagem=None):
         pedido_resposta = mflix_pb2.PedidoResposta()
@@ -198,6 +201,7 @@ class MovieServer:
 
         # Envia corretamente os 4 bytes do tamanho
         cliente.sendall(size.to_bytes(4, byteorder="big"))
+        print("send")
         print("send")
         # Envia a mensagem serializada
         cliente.sendall(resposta_byte)

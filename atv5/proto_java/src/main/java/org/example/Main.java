@@ -10,7 +10,7 @@ package org.example;
     * and then starts the interactive movie client menu*
  */
 import java.util.Scanner;
-class Main{
+public class Main{
     public static void main(String[] args) {
     try {
         Scanner sca=new Scanner(System.in);
