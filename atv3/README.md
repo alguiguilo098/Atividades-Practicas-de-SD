@@ -1,7 +1,3 @@
-Claro! Aqui está a versão limpa do `README.md`, sem os ícones e com formatação adequada para uso em projetos:
-
----
-
 # Atividade 1 – Programação com Sockets TCP  
 **Disciplina:** Sistemas Distribuídos  
 **Professor:** Rodrigo Campiolo  
