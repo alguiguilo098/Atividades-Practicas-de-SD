@@ -1,74 +1,118 @@
 # Mflix Software
 
-O **Mflix Software** é um sistema distribuído composto por um servidor TCP escrito em **Python** e um cliente desenvolvido em **Java**. Juntos, eles realizam operações CRUD sobre um banco de dados de filmes utilizando o **MongoDB**.
-A comunicação entre cliente e servidor é feita de forma eficiente por meio do **Protocol Buffers (Protobuf)**, garantindo velocidade, portabilidade e baixo consumo de rede.
+O **Mflix Software** é um sistema distribuído composto por um **servidor TCP em Python** e um **cliente em Java**. Juntos, eles realizam operações **CRUD** sobre um banco de dados de filmes utilizando o **MongoDB**.
 
-## Objetivo
+A comunicação entre cliente e servidor é feita de forma eficiente por meio do **Protocol Buffers (Protobuf)**, garantindo **velocidade**, **portabilidade** e **baixo consumo de rede**.
 
-O objetivo deste projeto é utilizar o **Protocol Buffers** como meio de comunicação entre cliente e servidor por meio de **sockets TCP**. Por ser um protocolo binário, o Protobuf permite uma comunicação mais eficiente e rápida no transporte de dados.
-Além disso, ele facilita o desenvolvimento paralelo das funcionalidades do cliente e do servidor, promovendo maior modularidade e produtividade durante a implementação do sistema.
+---
 
-## Configuração do Ambiente
+## 🎯 Objetivo
 
-### Pré-requisitos
+Este projeto tem como principal objetivo demonstrar o uso do **Protocol Buffers** como meio de comunicação entre cliente e servidor através de **sockets TCP**. O Protobuf, por ser um protocolo binário, permite:
 
-- Python 3.x
-- Java JDK 11 ou superior
-- MongoDB
-- `protoc(Protocol Buffers Compiler)
-- pip (Python Package Installer)
+* Comunicação rápida e eficiente;
+* Redução no uso de banda;
+* Modularidade no desenvolvimento (cliente e servidor podem ser desenvolvidos separadamente);
+* Melhor produtividade e escalabilidade.
 
+---
 
-### Configuração Do Servidor (Python)
+## ⚙️ Configuração do Ambiente
 
-    1. Clone o repositório:
+### ✅ Pré-requisitos
+
+* Python 3.x
+* Java JDK 11 ou superior
+* MongoDB (preferencialmente com MongoDB Atlas)
+* [Protocol Buffers Compiler (`protoc`)](https://protobuf.dev/)
+* `pip` (Python Package Installer)
+* `mvn` (Maven para o cliente Java)
+
+---
+
+## 🖥️ Configuração do Servidor (Python)
+
+1. **Clone o repositório:**
+
    ```bash
    git clone https://github.com/alguiguilo098/Atividades-Practicas-de-SD.git
-   cd atv5/
+   cd Atividades-Practicas-de-SD/atv5/
+   ```
 
-   2. Instale o protobuf com o seguinte commando:
+2. **Instale o compilador do Protobuf:**
 
    ```bash
-   sudo apt install protobuf
+   sudo apt install protobuf-compiler
+   ```
 
-   3. Acesse o diretório que possui o codigo do servidor e crie um ambiente virtual:
+3. **Acesse o diretório do servidor e crie o ambiente virtual:**
+
    ```bash
-    cd ./proto_py/
-    virtualenv .
-    
-    4. Posteriormente acesse o ambiente virtual e baixe as dependências
-    ```bash
-    source ./bin/activete
-    pip install -r requeriments.txt
+   cd proto_py/
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-    5. Configure o Atlas no Mongo DB
-        
-        5.1 Crie uma conta em https://www.mongodb.com/cloud/atlas.
+4. **Instale as dependências do Python:**
 
-        5.2 Crie um banco de dados e coleção
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-        5.3 Escolha para versão em python
+5. **Configure o MongoDB Atlas:**
 
-        5.4 escolha o modelos movies e nomeie como mflix
+   5.1 Acesse [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) e crie uma conta.
+   5.2 Crie um banco de dados e uma coleção.
+   5.3 Escolha a linguagem "Python" para integração.
+   5.4 Utilize o modelo `movies` e nomeie o banco como `mflix`.
+   5.5 Copie a **string de conexão** da aba `Connect > Connect your application`.
 
-        5.5 copie a URL no codigo do servidor na 4 linha
+6. **Atualize a string de conexão no código do servidor (linha 4 do `server.py`) com a sua URL do MongoDB Atlas.**
 
-        
-Copie a string de conexão
+7. **Inicie o servidor:**
 
-Em "Connect" > "Connect your application", copie a URL
-    6. Faça deploy do servidor
-    ```bash
-    python server.py
+   ```bash
+   python server.py
+   ```
 
-### Configuração Do Cliente (Java)
+---
 
-    1. Acesse o diretório no qual possui o codigo em java: 
-    ```bash
-    cd ./proto_java
+## 🧑‍💻 Configuração do Cliente (Java)
 
-    2. compile o protobuf:
-    ```bash
-    mvn compile 
+1. **Acesse o diretório do cliente:**
 
-    3.execute o cliente 
+   ```bash
+   cd ../proto_java/
+   ```
+
+2. **Compile os arquivos `.proto`:**
+
+   Certifique-se de que o arquivo `.proto` está na raiz ou no diretório `src/main/proto`. Depois, compile com:
+
+   ```bash
+   mvn compile
+   ```
+
+3. **Execute o cliente:**
+
+   ```bash
+   mvn exec:java -Dexec.mainClass="br.com.mflix.Client"
+   ```
+
+---
+
+## 📁 Estrutura Geral do Projeto
+
+```
+Atividades-Practicas-de-SD/
+├── atv5/
+│   ├── proto_py/         # Código do servidor Python
+│   │   ├── server.py
+│   │   ├── requirements.txt
+│   │   └── venv/         # Ambiente virtual
+│   └── proto_java/       # Código do cliente Java
+│       ├── pom.xml
+│       └── src/
+└── README.md             # (Este arquivo)
+```
+
