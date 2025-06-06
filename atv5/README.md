@@ -96,7 +96,7 @@ Este projeto tem como principal objetivo demonstrar o uso do **Protocol Buffers*
 3. **Execute o cliente:**
 
    ```bash
-   mvn exec:java -Dexec.mainClass="br.com.mflix.Client"
+   mvn exec:java
    ```
 
 ---
