@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package org.example.grpc;
+option java_package = "org.example.grpc";
+option java_multiple_files = true;
+
+message Filme {
+    string id = 1;
+    string titulo = 2;
+    repeated string diretores = 3;
+    int32 ano = 4;
+    repeated string atores = 5;
+    repeated string generos = 6;
+    int32 duracao = 7;
+}
+
+message FilmePedido {
+    enum reqType {
+        GET = 0;
+        POST = 1;
+        UPDATE = 2;
+        DELETE = 3;
+    }
+    reqType tipo_requisicao = 1;
+    Filme filme = 2;
+    repeated string atores = 3;
+    repeated string generos = 4;
+}
+
+message PedidoResposta {
+    repeated Filme filmes = 1;
+    string mensagem = 2;
+    bool sucesso = 3;
+}
+
+service FilmeService {
+    rpc GerenciaFilmes (FilmePedido) returns (PedidoResposta);
+}
