@@ -1,3 +1,4 @@
+org/example/Main.class
 org/example/grpc/FilmeServiceGrpc$FilmeServiceMethodDescriptorSupplier.class
 org/example/grpc/Mflix.class
 org/example/grpc/PedidoResposta.class
@@ -10,7 +11,11 @@ org/example/grpc/FilmeOrBuilder.class
 org/example/grpc/FilmeServiceGrpc$FilmeServiceBlockingStub.class
 org/example/grpc/FilmePedido$reqType$1.class
 org/example/grpc/FilmeServiceGrpc$MethodHandlers.class
+org/example/TablesMovies.class
+org/example/ConfigHead.class
+org/example/MenuCliente.class
 org/example/grpc/FilmeServiceGrpc$FilmeServiceFileDescriptorSupplier.class
+org/example/GrpcCliente.class
 org/example/grpc/FilmePedido$reqType.class
 org/example/grpc/PedidoRespostaOrBuilder.class
 org/example/grpc/FilmeServiceGrpc$FilmeServiceStub.class

@@ -6,7 +6,14 @@ import org.example.grpc.FilmeServiceGrpc;
 import org.example.grpc.FilmeServiceGrpc.FilmeServiceBlockingStub;
 import org.example.grpc.FilmePedido;
 import org.example.grpc.PedidoResposta;
+/*
+ *Name: Guilherme Almeida Lopes
+ *Name: Hugo Okumura
+ *Create: 16-05-2025
+ * Last modified: 21-05-2025
 
+ * defines Grpc Class communication,which make all communication, usign Google Remote Procidure Call
+ */
 public class GrpcCliente {
 
     private final ManagedChannel canal;

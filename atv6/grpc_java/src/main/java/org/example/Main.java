@@ -16,13 +16,13 @@ public class Main{
     try {
         Scanner sca=new Scanner(System.in);
         System.out.println("IP da Rede:");
-        String ip= sca.next();
+        String ip= sca.next(); // get IP
         System.out.println("Port:");
-        int port= sca.nextInt();
+        int port= sca.nextInt(); // get Port
         System.out.println();
-        GrpcCliente socketcliente=new GrpcCliente(ip,port);
-        MenuCliente menu=new MenuCliente(socketcliente);
-        menu.run();
+        GrpcCliente socketcliente=new GrpcCliente(ip,port); // grpc comunication
+        MenuCliente menu=new MenuCliente(socketcliente);// Menu Cliente
+        menu.run(); // run menu
 
     } catch (Exception e) {
         System.out.println(e.getMessage());
