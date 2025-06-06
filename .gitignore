@@ -6,3 +6,8 @@ atv3/quest2/client_files/**
 atv5/proto_py/bin/**
 atv5/proto_py/lib/**
 atv5/proto_py/__pycache__
+atv6/bin/**
+atv6/lib/**
+atv6/include/**
+atv6/lib64/**
+atv6/pyvenv.cfg
