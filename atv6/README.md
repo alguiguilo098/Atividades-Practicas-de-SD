@@ -1,6 +1,6 @@
 # Mflix Software
 
-O **Mflix Software** é um sistema distribuído composto por um **servidor TCP em Python** e um **cliente em Java**. Juntos, eles realizam operações **CRUD** sobre um banco de dados de filmes utilizando o **MongoDB**.
+O **Mflix Software** é um sistema distribuído composto por um **servidor grpc em Python** e um **cliente em Java**. Juntos, eles realizam operações **CRUD** sobre um banco de dados de filmes utilizando o **MongoDB**.
 
 A comunicação entre cliente e servidor é feita de forma eficiente por meio do **Protocol Buffers (Protobuf)**, garantindo **velocidade**, **portabilidade** e **baixo consumo de rede**.
 
@@ -8,10 +8,8 @@ A comunicação entre cliente e servidor é feita de forma eficiente por meio do
 
 ## 🎯 Objetivo
 
-Este projeto tem como principal objetivo demonstrar o uso do **Protocol Buffers** como meio de comunicação entre cliente e servidor através de **sockets TCP**. O Protobuf, por ser um protocolo binário, permite:
+Este projeto tem como principal objetivo demonstrar o uso do **grpc** como meio de comunicação entre cliente e servidor. O grpc, por ser um protocolo binário, permite:
 
-* Comunicação rápida e eficiente;
-* Redução no uso de banda;
 * Modularidade no desenvolvimento (cliente e servidor podem ser desenvolvidos separadamente);
 * Melhor produtividade e escalabilidade.
 
