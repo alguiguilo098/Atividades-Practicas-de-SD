@@ -34,7 +34,7 @@ Este projeto tem como principal objetivo demonstrar o uso do **grpc** como meio 
 
    ```bash
    git clone https://github.com/alguiguilo098/Atividades-Practicas-de-SD.git
-   cd Atividades-Practicas-de-SD/atv5/
+   cd Atividades-Practicas-de-SD/atv6/
    ```
 
 2. **Instale o compilador do Protobuf:**
