@@ -5,9 +5,27 @@ import mflix_pb2
 import mflix_pb2_grpc
 import grpc
 from bson.objectid import ObjectId
+'''
+    *Nomes: Guilherme Almeida Lopes
+    *Nomes: Hugo Okumura
+    *Create: 30-05-2025
+    * Last modified: 7-06-2025
 
+    Este código em python implementa uma API, utilizando gRPC e protobufs, de gerenciamento de filmes.
+    O servidor espera conexões externas de outros processos e responde a métodos como GET, POST, PUT e DELETE.
+    Ao receber requisições com esses métodos ele acessa a um banco de dados utilizando MongoDB ATLAS para gerenciar os filmes. 
+'''
+
+
+'''
+    Método que será envocado pelo gRPC e receberá conexões e gerenciá-las. 
+    O método extende o objeto gerado pelo gRPC especificado no mflix.proto.
+'''
 class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
-    
+
+    '''
+        Método construtor que irá inicializar a conexão com o MongoDB
+    '''
     def __init__(self):
         uri = "mongodb+srv://admin:admin@mflix.7jieeqw.mongodb.net/?retryWrites=true&w=majority&appName=Mflix"  
         # Substitua pelo URI real do MongoDB Atlas
@@ -15,6 +33,11 @@ class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
         self.db = self.client['Mflix']
         self.movies = self.db['movies']
 
+
+    '''
+        Método principal do serviço. Gerencia as requisições feitas por clientes.
+        Retorna uma mesnagem de erro caso o tipo de requisição não é um tipo de requisição que a API está configurada a tratar. 
+    '''
     def GerenciaFilmes(self, request, context):
         try:
             match request.tipo_requisicao:
@@ -44,6 +67,11 @@ class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
                 sucesso=False
             )
 
+    '''
+        Método GET do serviço.
+        Nele, o cliente pode consultar os filmes que estão registrados no banco de dados.
+        O cliente pode filtrar a lista de filmes retornados oferecendo uma lista de atores e/ou uma lista de generos.
+    '''
     def get_filmes(self, request):
         query = {}
         if request.atores:
@@ -65,6 +93,13 @@ class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
                 sucesso=True
             )
 
+
+    '''
+        Método de POST do serviço.
+        Nele, o cliente oference um objeto com todas as informações necessárias para adicionar um novo filme para o banco.
+        Se ouver campos vazios na requisição o servidor irá gerar uma resposta de erro e informar os campos obrigatórios.
+        Caso a criação seja bem sucedida o servidor irá gerar uma resposta de sucesso e o objeto adicionado para o cliente.
+    '''
     def post_filme(self, request):
         campos_vazios = []
         print("comecei a validar os campos")
@@ -108,6 +143,13 @@ class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
             sucesso=True
         )
 
+    '''
+        Método de PUT do serviço.
+        Nele, o cliente oferece um _id de um filme e um objeto com os campos
+            a serem atualizados e as informações atualizadas do filme.
+        Caso o _id não for um _id existente, o servidor irá gerar uma resposta de erro para o cliente.
+        Caso bem sucedido, o servidor irá gerar uma resposta de sucesso e retornar o objeto com as informações atualizadas.
+    '''
     def update_filme(self, request):
         if not request.filme.id:
             return mflix_pb2.PedidoResposta(
@@ -149,6 +191,12 @@ class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
                 sucesso=False
             )
 
+    '''
+        Método de DELETE do serviço.
+        Nele, o cliente oferece um _id de filme para que seja deletado do banco de dados.
+        Se o _id não for um existente, o servidor irá retornar uma mensagem de erro para o cliente.
+        Caso exista o servidor irá deletar o filme do banco e retornar uma mensagem de bem sucedido.
+    '''
     def delete_filme(self, request):
         if not request.filme.id:
             return mflix_pb2.PedidoResposta(
@@ -168,6 +216,9 @@ class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
                 sucesso=False
             )
 
+    '''
+        Método que converte o formato de documento vindo do banco de dados para o formato do protobuf.
+    '''
     def doc_to_filme(self, doc):
         return mflix_pb2.Filme(
             id=str(doc.get("_id", "")),
@@ -179,6 +230,9 @@ class MovieServerRPC(mflix_pb2_grpc.FilmeServiceServicer):
             generos=doc.get("generos", [])
         )
 
+'''
+    Função que configura o gRPC
+'''
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))  # corrigido aqui
     mflix_pb2_grpc.add_FilmeServiceServicer_to_server(MovieServerRPC(), server)

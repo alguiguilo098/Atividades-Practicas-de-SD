@@ -46,7 +46,7 @@ Este projeto tem como principal objetivo demonstrar o uso do **grpc** como meio 
 3. **Acesse o diretório do servidor e crie o ambiente virtual:**
 
    ```bash
-   cd proto_py/
+   cd grpc_python/
    python3 -m venv venv
    source venv/bin/activate
    ```
