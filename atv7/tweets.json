@@ -82,5 +82,95 @@
     "topico": "volei",
     "mensagem": "Quem lembra da final olímpica de 2004? Um dos jogos mais emocionantes da história! 🕰️🏅",
     "data": "2025-06-10T17:00:00Z"
+  },{
+    "id": 13,
+    "usuario": "@drible_certo",
+    "topico": "futebol",
+    "mensagem": "Gabigol voltou com tudo! Dois gols e uma assistência hoje! 🔥⚽",
+    "data": "2025-06-10T17:30:00Z"
+  },
+  {
+    "id": 14,
+    "usuario": "@craques_da_zueira",
+    "topico": "futebol",
+    "mensagem": "O zagueiro tropeçou sozinho e saiu o gol... risos nervosos 😅⚽",
+    "data": "2025-06-10T18:00:00Z"
+  },
+  {
+    "id": 15,
+    "usuario": "@tatico_fut",
+    "topico": "futebol",
+    "mensagem": "O novo esquema 3-4-3 do técnico surpreendeu todo mundo! 🎯⚽",
+    "data": "2025-06-10T18:15:00Z"
+  },
+  {
+    "id": 16,
+    "usuario": "@lendasdofut",
+    "topico": "futebol",
+    "mensagem": "Ronaldo Fenômeno em 2002 foi simplesmente imparável. Que saudade! 🇧🇷👑⚽",
+    "data": "2025-06-10T18:30:00Z"
+  },
+  {
+    "id": 17,
+    "usuario": "@resenha_das_4",
+    "topico": "futebol",
+    "mensagem": "Juiz caseiro? Hoje foi difícil engolir essa arbitragem... 😤⚖️⚽",
+    "data": "2025-06-10T18:45:00Z"
+  },
+  {
+    "id": 18,
+    "usuario": "@futebol_internacional",
+    "topico": "futebol",
+    "mensagem": "Mbappé marca hat-trick na Champions e leva o PSG à final! 🌟⚽",
+    "data": "2025-06-10T19:00:00Z"
+  },
+  {
+    "id": 19,
+    "usuario": "@camisa10ofc",
+    "topico": "futebol",
+    "mensagem": "O passe de calcanhar do Scarpa foi coisa de gênio! 🎩⚽",
+    "data": "2025-06-10T19:15:00Z"
+  },
+  {
+    "id": 20,
+    "usuario": "@torcida_fiel",
+    "topico": "futebol",
+    "mensagem": "Corinthians volta a vencer fora de casa depois de 6 jogos! 🖤⚽",
+    "data": "2025-06-10T19:30:00Z"
+  },
+  {
+    "id": 21,
+    "usuario": "@futebol_tatico",
+    "topico": "futebol",
+    "mensagem": "A compactação defensiva do Atlético foi impecável hoje! 🔒⚽",
+    "data": "2025-06-10T20:00:00Z"
+  },
+  {
+    "id": 22,
+    "usuario": "@jogando_emcasa",
+    "topico": "futebol",
+    "mensagem": "Torcida deu show nas arquibancadas! Que festa! 🎉⚽",
+    "data": "2025-06-10T20:30:00Z"
+  },
+  {
+    "id": 23,
+    "usuario": "@futebolnostalgia",
+    "topico": "futebol",
+    "mensagem": "Quem lembra do gol do Adriano contra a Argentina em 2004? Arrepia! 🇧🇷🔥",
+    "data": "2025-06-10T21:00:00Z"
+  },
+  {
+    "id": 24,
+    "usuario": "@paixao_nacional",
+    "topico": "futebol",
+    "mensagem": "Copa do Mundo chegando... já bate aquela ansiedade! 🏆🌎⚽",
+    "data": "2025-06-10T21:30:00Z"
+  },
+  {
+    "id": 25,
+    "usuario": "@futebolraizoficial",
+    "topico": "futebol",
+    "mensagem": "Campo molhado, chuteiras pesadas e raça. Isso é futebol de verdade! 🌧️⚽",
+    "data": "2025-06-10T22:00:00Z"
   }
 ]
