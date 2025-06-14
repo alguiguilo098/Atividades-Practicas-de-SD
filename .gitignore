@@ -1,4 +1,9 @@
 **/.venv/
+**/bin/**
+**/lib/**
+**/lib64/**
+**/include/**
+**/pyvenv.cfg
 atv3/quest1/quest1/user.db
 atv3/quest2/logs/**
 atv3/quest2/server_files/**

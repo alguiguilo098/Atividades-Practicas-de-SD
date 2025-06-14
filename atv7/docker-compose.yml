@@ -10,3 +10,16 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+  
+  classificador:
+    build: ./classificador
+    container_name: classificador
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+    
+
+
+volumes:
+  rabbitmq_data:
