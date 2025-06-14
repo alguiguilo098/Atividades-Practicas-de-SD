@@ -1,14 +1,20 @@
 import pika
 import json
 import os
+import time
 from collections import defaultdict
 
+# Palavras-chave por tópico
 topicos = {
-    "futebol": ["futebol", "jogador", "time", "gol","zagueiro","goleiro","prorrogação","bandeirinha","penalti"],
-    "voleibol": ["pivô", "saque", "corte", "jogador","vôlei","time","líbero","meio-de-rede","rede"],
+    "futebol": ["futebol", "jogador", "time",
+                 "gol", "zagueiro", "goleiro",
+                 "prorrogação", "bandeirinha", "penalti"],
+    "voleibol": ["pivô", "saque", "corte", 
+                 "jogador", "vôlei", "time",
+                 "líbero", "meio-de-rede", "rede"],
 }
 
-
+# Função de classificação por contagem de palavras-chave
 def classificar_topico_contagem(texto, topicos_palavras_chave):
     contagem = defaultdict(int)
     palavras_texto = texto.lower().split()
@@ -20,31 +26,32 @@ def classificar_topico_contagem(texto, topicos_palavras_chave):
     
     return max(contagem, key=contagem.get) if contagem else None
 
-
+# Callback para cada mensagem recebida
 def callback(channel, method, properties, body):
     tweet = json.loads(body)
     print(f'Recebido:\n {tweet}')
-    tp = classificar_topico_contagem(tweet['text'], topicos)
+    
+    tp = classificar_topico_contagem(tweet['mensagem'], topicos)
 
-    if tp == None:
-        pass
-    else:
+    if tp:
         publish_to_topic(channel, tweet, tp)
     
     channel.basic_ack(delivery_tag=method.delivery_tag)
 
+# Publica o tweet classificado no tópico correspondente
 def publish_to_topic(channel, tweet, topico):
     channel.basic_publish(
         exchange='amq.topic',
         routing_key=topico,
         body=json.dumps(tweet)
     )
-    print(f'Tweet: {tweet['id']} classificado como {topico}')
+    print(f"Tweet: {tweet['id']} classificado como {topico}")
 
-
+# Função principal
 def main():
+    time.sleep(20)
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'))
+        pika.ConnectionParameters(host="localhost",port=5672)
     )
     channel = connection.channel()
 
@@ -59,8 +66,6 @@ def main():
     print('Classificador aguardando mensagens...')
     channel.start_consuming()
 
-
+# Executa o programa
 if __name__ == '__main__':
     main()
-
-

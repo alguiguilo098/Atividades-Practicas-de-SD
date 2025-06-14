@@ -1,10 +1,16 @@
-FROM python:3.12-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt ./
-RUN python3 -m venv ./ \
-    source bin/activate \
-    pip3 install -r requirements.txt
+COPY requirements.txt .
 
-CMD ["python3", "coletor.py"]
+# Cria o ambiente virtual e instala dependências nele
+RUN python3 -m venv /app/venv && \
+    /app/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# Define o Python e Pip do ambiente virtual explicitamente
+ENV PATH="/app/venv/bin:$PATH"
+
+CMD ["python", "coletor.py"]
