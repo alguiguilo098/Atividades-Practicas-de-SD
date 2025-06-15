@@ -28,9 +28,9 @@ services:
       RABBITMQ_PORT: 5672
     restart: unless-stopped
 
-  classifier:
+  classificador:
     build: ./classificador
-    container_name: classifier
+    container_name: classificador
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -39,4 +39,17 @@ services:
       RABBITMQ_USER: guest
       RABBITMQ_PASS: guest
       RABBITMQ_PORT: 5672
+    restart: unless-stopped
+
+  assinante:
+    build: ./assinante
+    container_name: assinante
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+       RABBITMQ_HOST: rabbitmq
+       RABBITMQ_USER: guest
+       RABBITMQ_PASS: guest
+       RABBITMQ_PORT: 5672
     restart: unless-stopped

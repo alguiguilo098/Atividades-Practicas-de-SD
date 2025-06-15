@@ -35,13 +35,13 @@ def callback(channel, method, properties, body):
 
     if tp:
         publish_to_topic(channel, tweet, tp)
-    
+
     channel.basic_ack(delivery_tag=method.delivery_tag)
 
 # Publica o tweet classificado no tópico correspondente
 def publish_to_topic(channel, tweet, topico):
     channel.basic_publish(
-        exchange='amq.topic',
+        exchange='topicos',
         routing_key=topico,
         body=json.dumps(tweet)
     )
@@ -51,11 +51,14 @@ def publish_to_topic(channel, tweet, topico):
 def main():
     credenciais = pika.PlainCredentials(
         os.getenv('RABBITMQ_HOST','guest'),
-        os.getnev('RABBITMQ_PASS','guest')
+        os.getenv('RABBITMQ_PASS','guest')
     )
+    print(f'Host: {os.getenv('RABBITMQ_HOST','guest')}')
+    print(f'Port: {os.getenv('RABBITMQ_PORT', '56722')}')
+
 
     parameters = pika.ConnectionParameters(
-        host=os.getenv('RABBITMQ_HOST', 'rabbitmq'),
+        host=os.getenv('RABBITMQ_HOST', 'localhost'),
         port=int(os.getenv('RABBITMQ_PORT', '56722')),
         credentials=credenciais,
         connection_attempts=5,
@@ -69,21 +72,36 @@ def main():
             print(f'Tentativa {tentativa+1}/5: str({e})')
             time.sleep(20)
 
-    # raise pika.exceptions.AMQPConnectionError("Falha ao conectar ao RabbitMQ")
-    
     channel = connection.channel()
 
+    #Fila de consumo
     channel.queue_declare(queue="tweets", durable=True)
-
     channel.basic_consume(
         queue='tweets',
         on_message_callback=callback,
         auto_ack=False
     )
 
+    # Filas de tópicos
+    channel.exchange_declare(
+        exchange='topicos',
+        exchange_type='topic',
+        durable=True
+    )
+    for key in topicos.keys():
+        channel.queue_declare(queue=str(key), durable=True)
+
+        channel.queue_bind(
+            exchange='topicos',
+            queue=str(key),
+            routing_key=str(key)
+        )
+
+
     print('Classificador aguardando mensagens...')
     channel.start_consuming()
 
 # Executa o programa
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
+    # print(topicos.keys())

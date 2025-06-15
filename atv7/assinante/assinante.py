@@ -9,9 +9,9 @@ import pika.exceptions
 
 
 class AssinanteThread(threading.Thread):
-    def __init__(self, topic):
+    def __init__(self, topico):
         threading.Thread.__init__(self)
-        self.topic = topic
+        self.topico = topico
 
     def run(self):
         credenciais = pika.PlainCredentials(
@@ -19,7 +19,7 @@ class AssinanteThread(threading.Thread):
             os.getenv('RABBITMQ_PASS', 'guest')
         )
         parametros = pika.ConnectionParameters(
-            host=os.getenv('RABBITMQ_HOST', 'rabbitmq'),
+            host=os.getenv('RABBITMQ_HOST', 'localhost'),
             port=int(os.getenv('RABBITMQ_PORT', '5672')),
             credentials=credenciais,
             connection_attempts=5,
@@ -32,18 +32,24 @@ class AssinanteThread(threading.Thread):
                 time.sleep(20)
         channel = connetion.channel()
 
-        result = channel.queue_declare(queue='', exclusive=True)
+        channel.exchange_declare(
+            exchange='topicos',
+            exchange_type='topic',
+            durable=True
+        )
+
+        result = channel.queue_declare('', exclusive=True)
         queue_name = result.method.queue
 
         channel.queue_bind(
-            exchange='amq.topic',
+            exchange='topicos',
             queue=queue_name,
-            routing_key=self.topic
+            routing_key=self.topico
         )
 
         def callback(ch, method, properties, body):
             tweet = queue_name
-            print(f"{self.topic} {tweet['text']}")
+            print(f"{self.topico} {tweet['text']}")
         
         channel.basic_consume(
             queue=queue_name,
@@ -76,5 +82,5 @@ def main():
 
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

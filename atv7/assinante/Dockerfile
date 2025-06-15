@@ -3,10 +3,14 @@ FROM python:3.12-slim
 WORKDIR /app
 
 COPY requirements.txt .
-# RUN python3 -m venv .
-# RUN source bin/activate
-RUN pip3 install -r requirements.txt
 
-COPY assinante.py .
+# Cria o ambiente virtual e instala dependências nele
+RUN python3 -m venv /app/venv && \
+    /app/venv/bin/pip install --no-cache-dir -r requirements.txt
 
-CMD ["python3", "assinante.py"]
+COPY . .
+
+# Define o Python e Pip do ambiente virtual explicitamente
+ENV PATH="/app/venv/bin:$PATH"
+
+CMD ["python", "assinante.py"]
