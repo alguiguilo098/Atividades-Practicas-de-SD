@@ -54,23 +54,20 @@ def main():
         os.getnev('RABBITMQ_PASS','guest')
     )
 
+
     parameters = pika.ConnectionParameters(
-        host=os.getenv('RABBITMQ_HOST', 'rabbitmq'),
-        port=int(os.getenv('RABBITMQ_PORT', '56722')),
-        credentials=credenciais,
-        connection_attempts=5,
-        retry_delay=20
+        host=os.getenv('RABBITMQ_HOST', 'localhost'),
+        port=int(os.getenv('RABBITMQ_PORT', '5672')),
     )
     for tentativa in range(5):
         try:
             connection = pika.BlockingConnection(parameters)
             print(f'Conexão com RabbitMQ concluída, tentativas:{tentativa}')
+            break
         except pika.exceptions.AMQPConnectionError as e:
             print(f'Tentativa {tentativa+1}/5: str({e})')
             time.sleep(20)
 
-    # raise pika.exceptions.AMQPConnectionError("Falha ao conectar ao RabbitMQ")
-    
     channel = connection.channel()
 
     channel.queue_declare(queue="tweets", durable=True)

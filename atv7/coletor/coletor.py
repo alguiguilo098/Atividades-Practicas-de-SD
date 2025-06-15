@@ -2,7 +2,7 @@ import json
 import os
 import time
 import pika
-
+import sys
 def load_json(file_path):
     """
     Load a JSON file and return its content.
@@ -54,11 +54,12 @@ def publish_message(channel, queue_name, data):
         print(f"Message published to queue '{queue_name}'")
 
 def main():
-    time.sleep(20)
     channel, connection = createqueue("tweets")
     json_data = load_json('tweets.json')
     publish_message(channel, "tweets", json_data)
     connection.close()
+    channel.close()
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()
