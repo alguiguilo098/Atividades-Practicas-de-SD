@@ -49,9 +49,9 @@ def publish_to_topic(channel, tweet, topico):
 
 # Função principal
 def main():
-    credenciais = pika.ConnectionCredentials(
+    credenciais = pika.PlainCredentials(
         os.getenv('RABBITMQ_HOST','guest'),
-        os.getnev('RABBITMQ_PASS','guest)
+        os.getnev('RABBITMQ_PASS','guest')
     )
 
     parameters = pika.ConnectionParameters(
@@ -69,7 +69,7 @@ def main():
             print(f'Tentativa {tentativa+1}/5: str({e})')
             time.sleep(20)
 
-    raise pika.exceptions.AMQPConnectionError("Falha ao conectar ao RabbitMQ")
+    # raise pika.exceptions.AMQPConnectionError("Falha ao conectar ao RabbitMQ")
     
     channel = connection.channel()
 
