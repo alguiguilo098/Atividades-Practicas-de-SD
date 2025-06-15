@@ -9,19 +9,21 @@ import pika.exceptions
 
 
 class AssinanteThread(threading.Thread):
-    def __init__(self, topico):
+    def __init__(self, topico, assinante):
         threading.Thread.__init__(self)
         self.topico = topico
+        self.assinante = assinante
+
+    def callback(self, ch, method, properties, body):
+        tweet = self.queue_name
+        print(f"Assinante {self.assinante} Recebeu:\n {self.topico}:{tweet['text']}")
 
     def run(self):
-        credenciais = pika.PlainCredentials(
-            os.getenv('RABBITMQ_USER','guest'),
-            os.getenv('RABBITMQ_PASS', 'guest')
-        )
+        print(f'Assinante {self.assinante} inscrito no tópico {self.topico}')
+
         parametros = pika.ConnectionParameters(
             host=os.getenv('RABBITMQ_HOST', 'localhost'),
             port=int(os.getenv('RABBITMQ_PORT', '5672')),
-            credentials=credenciais,
             connection_attempts=5,
             retry_delay=20
         )
@@ -39,21 +41,17 @@ class AssinanteThread(threading.Thread):
         )
 
         result = channel.queue_declare('', exclusive=True)
-        queue_name = result.method.queue
+        self.queue_name = result.method.queue
 
         channel.queue_bind(
             exchange='topicos',
-            queue=queue_name,
+            queue=self.queue_name,
             routing_key=self.topico
         )
-
-        def callback(ch, method, properties, body):
-            tweet = queue_name
-            print(f"{self.topico} {tweet['text']}")
         
         channel.basic_consume(
-            queue=queue_name,
-            on_message_callback=callback,
+            queue=self.queue_name,
+            on_message_callback=self.callback,
             auto_ack=True
         )
         channel.start_consuming()
@@ -63,23 +61,21 @@ def main():
     topicos = os.getenv('TOPICOS', '').split(',')
     thread_count = int(os.getenv('THREAD_COUNT','1'))
     n_top = len(topicos)
-
+    
     print(topicos)
     print(thread_count)
     threads = []
     for i in range(thread_count):
-        thread = AssinanteThread(topicos[random.randint(0,n_top-1)])
+        print(i)
+        thread = AssinanteThread(topicos[random.randint(0,n_top-1)],i)
         thread.daemon = True
         thread.start()
         threads.append(thread)
-    
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         print('encerrando')
-
-
 
 
 if __name__ == "__main__":
