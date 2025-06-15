@@ -29,9 +29,10 @@ def classificar_topico_contagem(texto, topicos_palavras_chave):
 # Callback para cada mensagem recebida
 def callback(channel, method, properties, body):
     tweet = json.loads(body)
-    print(f'Recebido:\n {tweet}')
     
-    tp = classificar_topico_contagem(tweet['mensagem'], topicos)
+    # tp = classificar_topico_contagem(tweet['mensagem'], topicos)
+    tp = tweet['topico']
+    print(f'Recebido:\n {tweet['mensagem']}\n Tópico: {tp}')
 
     if tp:
         publish_to_topic(channel, tweet, tp)
@@ -49,19 +50,13 @@ def publish_to_topic(channel, tweet, topico):
 
 # Função principal
 def main():
-    credenciais = pika.PlainCredentials(
-        os.getenv('RABBITMQ_HOST','guest'),
-        os.getenv('RABBITMQ_PASS','guest')
-    )
+
     print(f'Host: {os.getenv('RABBITMQ_HOST','guest')}')
     print(f'Port: {os.getenv('RABBITMQ_PORT', '5672')}')
-
-
 
     parameters = pika.ConnectionParameters(
         host=os.getenv('RABBITMQ_HOST', 'localhost'),
         port=int(os.getenv('RABBITMQ_PORT', '5672')),
-        credentials=credenciais,
         connection_attempts=5,
         retry_delay=20
     )
@@ -72,7 +67,7 @@ def main():
             print(f'Conexão com RabbitMQ concluída, tentativas:{tentativa}')
             break
         except pika.exceptions.AMQPConnectionError as e:
-            print(f'Tentativa {tentativa+1}/5: str({e})')
+            print(f'Tentativa {tentativa+1}/5: {str(e)}')
             time.sleep(20)
 
     channel = connection.channel()
@@ -107,4 +102,3 @@ def main():
 # Executa o programa
 if __name__ == "__main__":
     main()
-    # print(topicos.keys())

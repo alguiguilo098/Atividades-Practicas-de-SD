@@ -15,8 +15,8 @@ class AssinanteThread(threading.Thread):
         self.assinante = assinante
 
     def callback(self, ch, method, properties, body):
-        tweet = self.queue_name
-        print(f"Assinante {self.assinante} Recebeu:\n {self.topico}:{tweet['text']}")
+        tweet = json.loads(body)
+        print(f"Assinante {self.assinante} Recebeu:\n {self.topico}:{tweet['mensagem']}")
 
     def run(self):
         print(f'Assinante {self.assinante} inscrito no tópico {self.topico}')
@@ -27,11 +27,14 @@ class AssinanteThread(threading.Thread):
             connection_attempts=5,
             retry_delay=20
         )
-        for i in range(5):
+        for tentativa in range(5):
             try:
                 connetion = pika.BlockingConnection(parametros)
+                print(f"Assinante {self.assinante}: conectou com o broker. tentativas: {tentativa}")
             except pika.exceptions.AMQPConnectionError as e:
+                print(f'Tentativa {tentativa+10}/5: str{str(e)}')
                 time.sleep(20)
+
         channel = connetion.channel()
 
         channel.exchange_declare(
