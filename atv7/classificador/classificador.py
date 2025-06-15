@@ -54,20 +54,23 @@ def main():
         os.getenv('RABBITMQ_PASS','guest')
     )
     print(f'Host: {os.getenv('RABBITMQ_HOST','guest')}')
-    print(f'Port: {os.getenv('RABBITMQ_PORT', '56722')}')
+    print(f'Port: {os.getenv('RABBITMQ_PORT', '5672')}')
+
 
 
     parameters = pika.ConnectionParameters(
         host=os.getenv('RABBITMQ_HOST', 'localhost'),
-        port=int(os.getenv('RABBITMQ_PORT', '56722')),
+        port=int(os.getenv('RABBITMQ_PORT', '5672')),
         credentials=credenciais,
         connection_attempts=5,
         retry_delay=20
     )
+
     for tentativa in range(5):
         try:
             connection = pika.BlockingConnection(parameters)
             print(f'Conexão com RabbitMQ concluída, tentativas:{tentativa}')
+            break
         except pika.exceptions.AMQPConnectionError as e:
             print(f'Tentativa {tentativa+1}/5: str({e})')
             time.sleep(20)
