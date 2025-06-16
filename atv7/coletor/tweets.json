@@ -2,85 +2,73 @@
   {
     "id": 1,
     "usuario": "@futebol_br",
-    "topico": "futebol",
     "mensagem": "O golaço de falta do Neymar ontem foi coisa de cinema! 🔥⚽",
     "data": "2025-06-10T10:30:00Z"
   },
   {
     "id": 2,
     "usuario": "@volei_mania",
-    "topico": "volei",
-    "mensagem": "A seleção feminina venceu por 3x1 em um jogo emocionante contra a Itália! 🏐🇧🇷",
+    "mensagem": "A seleção feminina de volei venceu por 3x1 em um jogo emocionante contra a Itália! 🏐🇧🇷",
     "data": "2025-06-10T11:00:00Z"
   },
   {
     "id": 3,
     "usuario": "@resenha_fut",
-    "topico": "futebol",
     "mensagem": "E o VAR, hein? Mais uma vez causando polêmica no Brasileirão... 🤯",
     "data": "2025-06-10T12:15:00Z"
   },
   {
     "id": 4,
     "usuario": "@ponto_e_set",
-    "topico": "volei",
     "mensagem": "Thaisa com mais um bloqueio decisivo no final do set! Que jogadora! 💪",
     "data": "2025-06-10T12:45:00Z"
   },
   {
     "id": 5,
     "usuario": "@bola_redonda",
-    "topico": "futebol",
     "mensagem": "Messi atinge a marca de 800 gols na carreira. Lenda viva! 👑⚽",
     "data": "2025-06-10T13:30:00Z"
   },
   {
     "id": 6,
     "usuario": "@volei_arte",
-    "topico": "volei",
     "mensagem": "A nova geração do vôlei masculino vem forte! Olho em Darlan e Adriano! 👀🔥",
     "data": "2025-06-10T14:00:00Z"
   },
   {
     "id": 7,
     "usuario": "@futebol_raiz",
-    "topico": "futebol",
     "mensagem": "Saudades do tempo que o clássico era jogado no barro e com raça! 🥲⚽",
     "data": "2025-06-10T14:30:00Z"
   },
   {
     "id": 8,
     "usuario": "@sacando_forte",
-    "topico": "volei",
     "mensagem": "Que saque foi aquele do Wallace? A bola parecia um míssil! 💣🏐",
     "data": "2025-06-10T15:00:00Z"
   },
   {
     "id": 9,
     "usuario": "@futebol_no_mundo",
-    "topico": "futebol",
     "mensagem": "Real Madrid anuncia novo técnico para a temporada 25/26! 👀⚪",
     "data": "2025-06-10T15:30:00Z"
   },
   {
     "id": 10,
     "usuario": "@volei_news",
-    "topico": "volei",
     "mensagem": "Brasil enfrentará os EUA na semifinal da Liga das Nações! Vai ser pedreira! 🏐🔥",
     "data": "2025-06-10T16:00:00Z"
   },
   {
     "id": 11,
     "usuario": "@comenteifut",
-    "topico": "futebol",
-    "mensagem": "Palmeiras e Flamengo farão a final da Copa do Brasil. Promessa de jogão! 🏆⚽",
+    "mensagem": "O zagueiro fez um gol na prorrogação, garantindo a vitória do time no clássico! ⚽🔥",
     "data": "2025-06-10T16:30:00Z"
   },
   {
     "id": 12,
     "usuario": "@volei_das_antigas",
-    "topico": "volei",
-    "mensagem": "Quem lembra da final olímpica de 2004? Um dos jogos mais emocionantes da história! 🕰️🏅",
+    "mensagem": "O líbero fez um saque perfeito, e o pivô marcou o ponto decisivo na rede! Que jogo! 🏐💥",
     "data": "2025-06-10T17:00:00Z"
   }
 ]
