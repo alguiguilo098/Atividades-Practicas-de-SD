@@ -3,37 +3,58 @@ import json
 import os
 import time
 from collections import defaultdict
+import re
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
+
+# Create: 16-06-2025 
+# Last modified: 16-06-2025
+
+# Description: Classificador de tweets por tópicos usando RabbitMQ.
+# Este script consome tweets de uma fila RabbitMQ, classifica-os em tópicos específicos
+#  com base em palavras-chaves
 
 # Palavras-chave por tópico
 topicos = {
-    "futebol": ["futebol", "jogador", "time",
-                 "gol", "zagueiro", "goleiro",
+    "futebol": ["futebol", "jogador", "time","clássico","técnico",
+                 "gol", "zagueiro", "goleiro","golaço","Brasileirão...",
                  "prorrogação", "bandeirinha", "penalti"],
-    "voleibol": ["pivô", "saque", "corte", 
-                 "jogador", "vôlei", "time",
+    "volei": ["pivô", "saque", "corte","bloqueio", 
+                 "jogador", "vôlei", "time","pedreira",
                  "líbero", "meio-de-rede", "rede"],
 }
 
 # Função de classificação por contagem de palavras-chave
 def classificar_topico_contagem(texto, topicos_palavras_chave):
     contagem = defaultdict(int)
-    palavras_texto = texto.lower().split()
     
+    # Tokenização simples, removendo pontuação e convertendo para minúsculas
+    palavras_texto = re.findall(r'\b\w+\b', texto.lower())
+
     for topico, palavras_chave in topicos_palavras_chave.items():
         for palavra in palavras_chave:
-            if palavra.lower() in palavras_texto:
-                contagem[topico] += 1
+            contagem[topico] += palavras_texto.count(palavra.lower())
     
-    return max(contagem, key=contagem.get) if contagem else None
+    if not contagem:
+        return None
+
+    # Retorna o tópico com maior contagem
+    topico_mais_relevante = max(contagem, key=contagem.get)
+    
+    # Caso todas as contagens sejam 0
+    if contagem[topico_mais_relevante] == 0:
+        return None
+
+    return topico_mais_relevante
+
 
 # Callback para cada mensagem recebida
 def callback(channel, method, properties, body):
     tweet = json.loads(body)
     
-    # tp = classificar_topico_contagem(tweet['mensagem'], topicos)
-    tp = tweet['topico']
+    tp = classificar_topico_contagem(tweet['mensagem'], topicos)
     print(f'Recebido:\n {tweet['mensagem']}\n Tópico: {tp}')
-
+    tweet["topico"]=tp
     if tp:
         publish_to_topic(channel, tweet, tp)
 

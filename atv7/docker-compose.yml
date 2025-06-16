@@ -53,5 +53,7 @@ services:
        RABBITMQ_PASS: guest
        RABBITMQ_PORT: 5672
        TOPICOS: "futebol,volei"
-       THREAD_COUNT: 7
+       THREAD_COUNT_FUTEBOL: 2
+       THREAD_COUNT_VOLEI: 2
+       THREAD_COUNT_AMBOS: 2
     restart: unless-stopped

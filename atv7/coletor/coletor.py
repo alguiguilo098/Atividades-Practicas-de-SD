@@ -1,8 +1,16 @@
 import json
 import os
-import time
 import pika
 import sys
+
+# Name: Guilherme Almeida Lopes
+# Name: Hugo Okumura
+
+# Create: 24-04-2025 
+# Last modified: 27-04-2025
+
+# Description: Coletor de tweets que lê um arquivo JSON e publica os tweets em uma fila RabbitMQ.
+# Este script
 def load_json(file_path):
     """
     Load a JSON file and return its content.
@@ -54,9 +62,13 @@ def publish_message(channel, queue_name, data):
         print(f"Message published to queue '{queue_name}'")
 
 def main():
+    #
     channel, connection = createqueue("tweets")
+    # Load JSON data from file
     json_data = load_json('tweets.json')
+    # Publish messages to the queue
     publish_message(channel, "tweets", json_data)
+
     connection.close()
     channel.close()
     sys.exit(0)
