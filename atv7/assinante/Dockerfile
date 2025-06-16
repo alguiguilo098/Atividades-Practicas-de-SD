@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -13,4 +13,4 @@ COPY . .
 # Define o Python e Pip do ambiente virtual explicitamente
 ENV PATH="/app/venv/bin:$PATH"
 
-CMD ["python", "coletor.py"]
+CMD ["python", "assinante.py"]

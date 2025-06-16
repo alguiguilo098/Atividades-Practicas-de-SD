@@ -1,25 +1,57 @@
-version: '3.8'
 
 services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    hostname: rabbitmq  # Adicione esta linha
     ports:
-      - "5672:5672"     # Porta do protocolo AMQP
-      - "15672:15672"   # Porta do painel de administração web
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-  
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  coletor:
+    build: ./coletor
+    container_name: coletor
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      RABBITMQ_PORT: 5672
+    restart: unless-stopped
+
   classificador:
     build: ./classificador
     container_name: classificador
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     environment:
       RABBITMQ_HOST: rabbitmq
-    
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      RABBITMQ_PORT: 5672
+    restart: unless-stopped
 
-
-volumes:
-  rabbitmq_data:
+  assinante:
+    build: ./assinante
+    container_name: assinante
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+       RABBITMQ_HOST: rabbitmq
+       RABBITMQ_USER: guest
+       RABBITMQ_PASS: guest
+       RABBITMQ_PORT: 5672
+       TOPICOS: "futebol,volei"
+       THREAD_COUNT: 7
+    restart: unless-stopped
