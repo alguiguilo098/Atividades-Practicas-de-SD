@@ -146,7 +146,8 @@ class MenuCliente {
     private void update_filme(){
         System.out.print("Id: ");
         String id=sca.next();
-        Filme movie=criar_filme().setId(id).build();
+        Filme movie=criar_filme();
+        movie.setId(id);
         FilmePedido pedido =this.operations.update_filme_id(movie);
 
         System.out.println("Enviado Requisição ...");
