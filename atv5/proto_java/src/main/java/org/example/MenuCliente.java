@@ -99,7 +99,6 @@ class MenuCliente {
         socket.sendFilmeRequest(pedido);
         System.out.println("Enviado Recebendo Resposta ...");
         PedidoResposta response=socket.receiveFilmeResponse();
-
         System.out.println(response.getErro());
     }
     private void get_actors_movie(){
@@ -145,19 +144,19 @@ class MenuCliente {
 
     private void update_filme(){
         System.out.print("Id: ");
-        String id=sca.next();
-        Filme movie=criar_filme();
-        movie.setId(id);
-        FilmePedido pedido =this.operations.update_filme_id(movie);
-
+        String id = sca.next();
+        Filme.Builder movieBuilder = criar_filme();  // ← usa Builder corretamente
+        movieBuilder.setId(id);                      // ← setId funciona aqui
+        FilmePedido pedido = this.operations.update_filme_id(movieBuilder.build());  // ← passa Filme final
+    
         System.out.println("Enviado Requisição ...");
         socket.sendFilmeRequest(pedido);
         System.out.println("Enviado Recebendo Resposta ...");
-
-        PedidoResposta response=socket.receiveFilmeResponse();
+    
+        PedidoResposta response = socket.receiveFilmeResponse();
         System.out.println(response.getErro());
-
     }
+    
     public  void run(){
         while (true){
             show_menu();

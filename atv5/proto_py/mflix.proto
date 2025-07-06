@@ -13,21 +13,22 @@ message Filme {
 }
 
 message FilmePedido {
-    enum reqType {
-        GET = 1;
-        POST = 2;
-        UPDATE = 3;
-        DELETE = 4;
-    }
-    reqType tipo_requisicao = 1;
-    Filme filme = 2;
-    repeated string atores = 3;
-    repeated string generos = 4;
-}
+  enum ReqType {
+    GET = 0;
+    POST = 1;
+    UPDATE = 2;
+    DELETE = 3;
+  }
 
+  ReqType tipo_requisicao = 1;
+  Filme filme = 2;
+  repeated string atores = 3;
+  repeated string generos = 4;
+}
 message PedidoResposta {
     repeated Filme filmes = 1;
-    string mensagem = 2;
+    string erro = 2;
     bool sucesso = 3;
 }
+
 
